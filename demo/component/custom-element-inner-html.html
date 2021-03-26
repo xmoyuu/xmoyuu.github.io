@@ -1,0 +1,9 @@
+<script>
+    customElements.define('user-info', class extends HTMLElement {
+        connectedCallback() {
+            setTimeout(() => alert(this.innerHTML))
+        }
+    })
+</script>
+
+<user-info>John</user-info>

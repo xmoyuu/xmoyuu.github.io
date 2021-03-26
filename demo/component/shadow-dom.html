@@ -1,0 +1,13 @@
+<script>
+    customElements.define('show-hello', class extends HTMLElement {
+        connectedCallback() {
+            const shadow = this.attachShadow({ mode: 'open' })
+            shadow.innerHTML = `
+                <p>Hello, ${this.getAttribute('name')}</p>
+            `
+        }
+    })
+</script>
+
+<show-hello id="hello" name="John"></show-hello>
+<!-- hello.shadowRoot -->

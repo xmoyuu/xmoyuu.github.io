@@ -1,0 +1,21 @@
+<body>
+    <label for="number">number:</label>
+    <input id="input" value="0" autocomplete="off">
+    <output id="result"></output>
+</body>
+
+<script>
+    worker = new Worker('worker.js')
+
+    input.oninput = () => {
+        worker.postMessage(input.value)
+    }
+
+    worker.onmessage = event => {
+        result.textContent = event.data
+    }
+
+    worker.onerror = error => {
+        throw error
+    }
+</script>

@@ -1,0 +1,126 @@
+<body>
+    <h1>Page Number</h1>
+
+    <h2>Public Chat</h2>
+    <div id="public"></div>
+    <input size="50" id="inputPublic">
+    <button id="post">post</button>
+
+    <h2>Private Chat</h2>
+    <ul id="private"></ul>
+</body>
+
+<script>
+    sharedWorker = new SharedWorker('worker.js')
+
+    post.onclick = () => {
+        sharedWorker.port.postMessage(`txt ${inputPublic.value}`)
+        inputPublic.value = ''
+    }
+
+    sharedWorker.port.addEventListener('message', pageNumber)
+    sharedWorker.port.addEventListener('message', updatePublicChat)
+    sharedWorker.port.addEventListener('message', startPrivateChat)
+
+    function pageNumber(event) {
+        if (event.data.substr(0, 4) == 'num ') {
+            pageNumber = event.data.substr(4).split(' ', 1)[0]
+            document.getElementsByTagName('h1')[0].textContent += ` ${pageNumber}`
+        }
+        else return
+    }
+
+    function updatePublicChat(event) {
+        if (event.data.substr(0, 4) == 'txt ') {
+
+            pageNumber = event.data.substr(4).split(' ', 1)[0]
+            message = event.data.substr(4 + pageNumber.length + 1)
+
+            p = document.createElement('p')
+            {
+                button = document.createElement('button')
+                span = document.createElement('span')
+            }
+            p.appendChild(button)
+            p.appendChild(span)
+
+            public.appendChild(p)
+
+            button.textContent = pageNumber
+            button.onclick = () => {
+                sharedWorker.port.postMessage(`msg ${pageNumber}`)
+            }
+
+
+            span.textContent = message
+        }
+        else return
+    }
+
+
+    function startPrivateChat(event) {
+        if (event.data.substr(0, 4) == 'msg ') {
+
+            li = document.createElement('li')
+            {
+                h3 = document.createElement('h3')
+                div = document.createElement('div')
+                form = document.createElement('form')
+                {
+                    p = document.createElement('p')
+                    {
+                        input = document.createElement('input')
+                        textNode = document.createTextNode(' ')
+                        button = document.createElement('button')
+                    }
+                    p.appendChild(input)
+                    p.appendChild(textNode)
+                    p.appendChild(button)
+                }
+                form.appendChild(p)
+            }
+            li.appendChild(h3)
+            li.appendChild(div)
+            li.appendChild(form)
+            private.appendChild(li)
+
+            pageNumber = event.data.substr(4).split(' ', 1)[0]
+            h3.textContent = `Private chat with ${pageNumber}`
+            input.size = 50
+            button.textContent = 'Post'
+
+            createDom = () => {
+                p = document.createElement('p')
+                {
+                    strong = document.createElement('strong')
+                    span = document.createElement('span')
+                }
+                p.appendChild(strong)
+                p.appendChild(span)
+                div.appendChild(p)
+            }
+
+            addMessage = (pageNumber, message) => {
+                strong.textContent = `${pageNumber}`
+                span.textContent = message
+            }
+
+            port = event.ports[0]
+            port.onmessage = event => {
+                createDom()
+                addMessage(pageNumber, event.data)
+            }
+
+            form.onsubmit = () => {
+                port.postMessage(input.value)
+                createDom()
+                addMessage('me', input.value)
+                input.value = ''
+                return false
+            }
+        }
+        else return
+    }
+
+    sharedWorker.port.start()
+</script>

@@ -1,0 +1,15 @@
+<body>
+    <progress value="0" max="100" id="progress"></progress>
+</body>
+
+<script>
+    function sleep(ms) {
+        time = new Date().getTime()
+        while (new Date().getTime() < time + ms);
+    }
+
+    for (let i = 0; i <= 100; i++) {
+        progress.value = i
+        sleep(100)
+    }
+</script>

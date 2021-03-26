@@ -1,0 +1,33 @@
+<style>
+    #digit {
+        width: .5em;
+        overflow: hidden;
+        font: 32px monospace;
+        cursor: pointer;
+    }
+
+    #stripe {
+        display: inline-block
+    }
+
+    #stripe.animate {
+        transform: translate(-90%);
+
+        transition: transform 9s linear;
+    }
+</style>
+
+<body>
+    <div id="digit">
+        <div id="stripe">0123456789</div>
+    </div>
+</body>
+
+
+<script>
+    stripe.onclick = function () {
+        sec = new Date().getSeconds() % 10
+        stripe.style.transitionDelay = '-' + sec + 's'
+        stripe.classList.add('animate');
+    }
+</script>

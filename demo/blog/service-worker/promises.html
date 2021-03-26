@@ -1,0 +1,35 @@
+<body>
+    <img id="image">
+</body>
+
+<script>
+    function imgLoad(url) {
+        return new Promise((resolve, reject) => {
+            request = new XMLHttpRequest()
+            request.open('GET', url)
+            request.responseType = 'blob'
+            request.onload = () => {
+                if (request.status === 200) {
+                    resolve(request.response)
+                }
+                else {
+                    reject(Error(`${request.statusText}`))
+                }
+            }
+            request.onerror = () => {
+                reject(Error('onerror'))
+            }
+            request.send()
+        })
+    }
+
+    imgLoad('2019-bilibiliID-11371674-BY-你的心弦有我来过-bilibiliUID-11134708-NC.jpg')
+        .then(
+            response => {
+                image.src = URL.createObjectURL(response)
+            },
+            Error => {
+                console.log(`${Error}`)
+            }
+        )
+</script>

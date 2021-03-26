@@ -1,0 +1,54 @@
+<head></head>
+<input type="file" name="fileInput" id="fileInput" onchange="update()">
+<script>
+    function update() {
+        fileInput = document.getElementById('fileInput')
+        file = fileInput.files[0]
+        fileReader = new FileReader()
+        fileReader.readAsArrayBuffer(file)
+        fileReader.onload = function () {
+            arrayBuffer = fileReader.result
+            uint8Array = new Uint8Array(arrayBuffer)
+            uint8Array = [...uint8Array].map(x => x.toString(16))
+            result = []
+            for (i = 0; i < uint8Array.length; i += 4) {
+                result.push(uint8Array.slice(i, i + 4))
+            }
+            console.table(result)
+        }
+        fileReader.addEventListener("load", processimage, false)
+        function processimage(e) {
+            buffer = e.target.result
+            dataView = new DataView(buffer)
+
+            bitmap = new Array
+            bitmap.BMPHeader = new Array
+            bitmap.DIBHeader = new Array
+
+            bitmap.BMPHeader.BM = dataView.getUint16(0, true)
+            bitmap.BMPHeader.fileSize = dataView.getUint32(2, true)
+            bitmap.BMPHeader.applicationSpecific = dataView.getUint16(6, true)
+            bitmap.BMPHeader.applicationSpecific = dataView.getUint16(8, true)
+            bitmap.BMPHeader.offset = dataView.getUint32(10, true)
+
+            bitmap.DIBHeader.DIBHeaderSize = dataView.getUint32(14, true)
+            bitmap.DIBHeader.imageWidth = dataView.getUint32(18, true)
+            bitmap.DIBHeader.imageHeight = dataView.getUint32(22, true)
+            bitmap.DIBHeader.colorPlanes = dataView.getUint16(26, true)
+            bitmap.DIBHeader.bit = dataView.getUint16(28, true)
+            bitmap.DIBHeader.compression = dataView.getUint32(30, true)
+            bitmap.DIBHeader.dataSize = dataView.getUint32(34, true)
+            bitmap.DIBHeader.printResolution = dataView.getUint32(38, true)
+            bitmap.DIBHeader.printResolution = dataView.getUint32(42, true)
+            bitmap.DIBHeader.palette = dataView.getUint32(46, true)
+            bitmap.DIBHeader.importantColor = dataView.getUint32(50, true)
+
+            bitmap.DIBHeader.RBitMask = dataView.getUint32(54, true)
+            bitmap.DIBHeader.GBitMask = dataView.getUint32(58, true)
+            bitmap.DIBHeader.BBitMask = dataView.getUint32(62, true)
+            bitmap.DIBHeader.ABitMask = dataView.getUint32(66, true)
+
+            bitmap.pixels = new Uint8Array(buffer, bitmap.BMPHeader.offset)
+        }
+    }
+</script>

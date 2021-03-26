@@ -1,0 +1,33 @@
+<body>
+    <main id="main">
+        <button id="button">button</button>
+    </main>
+    <script id="script">
+
+
+        navigator.permissions.query({
+            name: 'clipboard-read'
+        }).then(permissionStatus => {
+            console.log(permissionStatus.state)
+            alert(`permissionStatus.state: ${permissionStatus.state}`)
+            permissionStatus.onchange = () => {
+                alert(`permissionStatus.state: ${permissionStatus.state}`)
+            }
+        })
+
+        button.onpointerup = (event) => {
+            navigator.clipboard.writeText('The implementation is available through the navigator.clipboard API which must be called within user gesture event handlers like pointerdown or pointerup, and only works for content served in a secure context (e.g. https://). Instead of a permissions-based model for reading from the clipboard, a native UI is displayed when the page calls into the clipboard API; the clipboard can only be accessed if the user then explicitly interacts with the platform UI.').then(() => {
+                alert('写入剪贴板')
+            })
+            navigator.clipboard.readText().then(
+                text => main.innerText = text)
+        }
+    </script>
+</body>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `${main.innerHTML}`
+    showScript.innerText = `${script.innerText}`
+</script>

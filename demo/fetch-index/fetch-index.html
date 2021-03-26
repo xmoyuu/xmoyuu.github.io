@@ -1,0 +1,29 @@
+<body>
+    <iframe src="." frameborder="0" width="100%"></iframe>
+    <main id="main"></main>
+</body>
+
+<script id="script">
+    fetchIndex('.')
+    function fetchIndex(url) {
+        fetch(url).then(function (response) {
+            return response.text()
+        })
+            .then(text => {
+                return new window.DOMParser().parseFromString(text, 'text/html')
+            })
+            .then(parsed => {
+                parsed.querySelectorAll('li>a').forEach(element => {
+                    link = element.href
+                    main.innerText += `${link}\n`
+                })
+            })
+    }
+</script>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `    ${main.outerHTML}`
+    showScript.innerText = `${script.innerText}`
+</script>

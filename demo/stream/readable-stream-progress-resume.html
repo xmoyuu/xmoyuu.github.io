@@ -1,0 +1,95 @@
+<body>
+    <p> F12
+        Developer Tool
+        Network Monitor
+        <a href="https://developer.mozilla.org/docs/Tools/Network_Monitor/Throttling">throttling</a>
+        &
+        disable cache
+        to test
+    </p>
+</body>
+
+<main id="main">
+    <progress value="0" max="1" id="progress"></progress>
+    <button id="button">Download</button>
+    <span id="downloading"></span>
+    <img id="image" height="30%">
+</main>
+
+<script id="script">
+    let abortController, isDownloading
+    chunks = []
+    loadedLength = 0
+
+    button.onclick = () => {
+        if (isDownloading) {
+            isDownloading = false
+            abortController.abort()
+        }
+        else {
+            isDownloading = true
+            downloading.textContent = ''
+            request()
+        }
+    }
+
+    function request() {
+        abortController = new AbortController()
+        signal = abortController.signal
+        fetch('2019-bilibiliID-11371674-BY-你的心弦有我来过-bilibiliUID-11134708-NC.jpg', {
+            headers:
+            {
+                'Range': `bytes=${loadedLength}-`
+            },
+            signal,
+        })
+            .then(response => stream(response))
+            .then(stream => new Response(stream))
+            .then(response => response.blob())
+            .then(blob => URL.createObjectURL(blob))
+            .then(url => image.src = url)
+            .catch(event => {
+                isDownloading = false
+                downloading.textContent = event.message
+            })
+        signal.onabort = () => { }
+    }
+
+    function stream(response) {
+        return new ReadableStream({
+            start(controller) {
+                reader = response.body.getReader()
+                contentLength = response.headers.get('content-length')
+                pump()
+                function pump() {
+                    reader.read()
+                        .then(({ done, value }) => {
+                            if (done) {
+                                let chunk
+                                while (chunk = chunks.shift()) {
+                                    controller.enqueue(chunk)
+                                }
+                                controller.close()
+                                return
+                            }
+                            loadedLength += value.length
+                            progress.value = loadedLength / contentLength
+                            chunks.push(value)
+                            pump()
+                        })
+                        .catch(event => {
+                            isDownloading = false
+                            downloading.textContent = event.message
+                        })
+                }
+            }
+        })
+    }
+</script>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `${main.innerHTML}`
+    showScript.innerText = `${script.innerText}`
+</script>

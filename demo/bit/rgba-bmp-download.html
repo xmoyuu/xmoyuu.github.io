@@ -1,0 +1,153 @@
+<body>
+    <canvas id="canvas"></canvas>
+    <button id="png">download as PNG</button>
+    <br>
+    <canvas id="zoom"></canvas>
+</body>
+
+<script>
+    canvas.width = 2
+    canvas.height = 2
+
+    context = canvas.getContext('2d')
+
+    context.fillStyle = 'rgba(255,0,0,1)'
+    context.fillRect(0, 0, 1, 1)
+
+    context.fillStyle = 'rgba(0,255,0,1)'
+    context.fillRect(1, 0, 1, 1)
+
+    context.fillStyle = 'rgba(0,0,255,1)'
+    context.fillRect(0, 1, 1, 1)
+
+    context.fillStyle = 'rgba(255,255,255,0)'
+    context.fillRect(1, 1, 1, 1)
+
+    function downloadAsPNG(canvas) {
+        a = document.createElement('a')
+        a.download = 'rgba.png'
+        a.href = canvas.toDataURL()
+        a.click()
+    }
+    png.onclick = () => {
+        downloadAsPNG(canvas)
+    }
+
+    zoom.width = 100
+    zoom.height = 100
+
+    zoomContext = zoom.getContext('2d')
+
+    zoomContext.imageSmoothingEnabled = false
+    zoomContext.drawImage(
+        canvas,
+        0, 0,
+        100, 100,
+    )
+
+    function createBMP(context) {
+        imageData = context.getImageData(0, 0, canvas.width, canvas.height)
+
+        // 32-bit bitmap with opacity values in the alpha channel (Windows DIB Header BITMAPV4HEADER) 
+
+        function write32BitIntLittleEndian(dest, number) {
+            dest.push(number & 0xff)
+            dest.push((number & 0xff00) >>> 8)
+            dest.push((number & 0xff0000) >>> 16)
+            dest.push(number >>> 24)
+        }
+
+        function write16BitIntLittleEndian(dest, number) {
+            dest.push(number & 0xff)
+            dest.push((number & 0xff00) >>> 8)
+        }
+
+        imageWidth = imageData.width
+        imageHeight = imageData.height
+        dataSize = imageWidth * imageHeight * 4
+        fileSize = dataSize + 122
+
+        applicationSpecific = 0
+
+        BMPHeaderSize = 14
+        DIBHeaderSize = 108
+        offset = BMPHeaderSize + DIBHeaderSize
+
+        colorPlanes = 1
+        bit = 32
+        compression = 3
+        // 3:unused
+        printResolution = Math.ceil(72 * 39.3701)
+        palette = 0
+        importantColor = 0
+        // 0:all are important
+        RBitMask = 0xFF000000
+        GBitMask = 0x00FF0000
+        BBitMask = 0x0000FF00
+        ABitMask = 0x000000FF
+
+        BMPHeader = new Array
+        DIBHeader = new Array
+        pixel = new Array
+
+        BMPHeader.push(0x42, 0x4D)
+        // 'B','M'
+
+        write32BitIntLittleEndian(BMPHeader, fileSize)
+        write32BitIntLittleEndian(BMPHeader, applicationSpecific)
+        write32BitIntLittleEndian(BMPHeader, offset)
+
+        write32BitIntLittleEndian(DIBHeader, DIBHeaderSize)
+        write32BitIntLittleEndian(DIBHeader, imageWidth)
+        write32BitIntLittleEndian(DIBHeader, imageHeight)
+        write16BitIntLittleEndian(DIBHeader, colorPlanes)
+        write16BitIntLittleEndian(DIBHeader, bit)
+        write32BitIntLittleEndian(DIBHeader, compression)
+        write32BitIntLittleEndian(DIBHeader, dataSize)
+        write32BitIntLittleEndian(DIBHeader, printResolution)
+        write32BitIntLittleEndian(DIBHeader, printResolution)
+        write32BitIntLittleEndian(DIBHeader, palette)
+        write32BitIntLittleEndian(DIBHeader, importantColor)
+        write32BitIntLittleEndian(DIBHeader, RBitMask)
+        write32BitIntLittleEndian(DIBHeader, GBitMask)
+        write32BitIntLittleEndian(DIBHeader, BBitMask)
+        write32BitIntLittleEndian(DIBHeader, ABitMask)
+
+        DIBHeader.push(0x20, 0x6E, 0x69, 0x57)
+        //['w','i','n,''']
+        for (i = 48; i > 0; i--) {
+            DIBHeader.push(0x00)
+        }
+
+        for (i = imageHeight - 1; i >= 0; i--) {
+            index = imageWidth * i * 4
+            for (j = 0; j < imageWidth; j++) {
+                x = 4 * j
+                pixel.push(imageData.data[index + x + 3])
+                pixel.push(imageData.data[index + x + 2])
+                pixel.push(imageData.data[index + x + 1])
+                pixel.push(imageData.data[index + x])
+            }
+        }
+        return BMPHeader.concat(DIBHeader).concat(pixel)
+    }
+
+    function createBMPURL(data) {
+        string = new String
+        for (i = 0; i < data.length; i++) {
+            string += String.fromCharCode(data[i])
+        }
+        return `data:image/bmp;base64,${btoa(string)}`
+    }
+</script>
+
+<button onmousedown="downloadAsBMP(context)">download as BMP</button>
+<script>
+    function downloadAsBMP(context) {
+        link = document.createElement('a')
+        link.download = 'rgba.bmp'
+        bmp = createBMP(context)
+        link.href = createBMPURL(bmp)
+        link.click()
+    }
+</script>

@@ -1,0 +1,33 @@
+<head>
+    <script>
+        audioContext = new window.AudioContext()
+
+        async function getFile(audioContext, filepath) {
+            response = await fetch(filepath)
+            arrayBuffer = await response.arrayBuffer()
+            audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
+            return audioBuffer
+        }
+
+        async function setupSample() {
+            filePath = 'dtmf.mp3'
+            sample = await getFile(audioContext, filePath)
+            return sample
+        }
+
+        function playSample(audioContext, audioBuffer) {
+            sampleSource = audioContext.createBufferSource()
+            sampleSource.buffer = audioBuffer
+            sampleSource.connect(audioContext.destination)
+            sampleSource.start()
+            return sampleSource
+        }
+
+        setupSample()
+            .then((sample) => {
+                dtmf = sample // to be used in our playSample function
+                playSample(audioContext, dtmf)
+            })
+    </script>
+</head>
+

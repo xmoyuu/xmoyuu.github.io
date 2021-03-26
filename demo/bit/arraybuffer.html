@@ -1,0 +1,43 @@
+<body>
+    <main id="main"></main>
+</body>
+
+<script id="script">
+    arrayBuffer = new ArrayBuffer(32)
+    dataView = new DataView(arrayBuffer)
+
+    uint8data = dataView.getUint8(1)
+
+    uint8Array = new Uint8Array([0, 1, 2])
+    uint8Array[0] = 3
+
+    arrayBuffer = new ArrayBuffer(16)
+    int32Array = new Int32Array(arrayBuffer)
+
+    int32Array.set([0, 1, 2, 3])
+    int16Array = new Int16Array(arrayBuffer)
+    dataView = new DataView(arrayBuffer)
+
+    int32data = dataView.getInt32(8, 11, true)
+    dataView.setInt32(0, 4, true)
+
+    buffer = new ArrayBuffer(24)
+
+    uint32Array = new Uint32Array(buffer, 0, 1)
+    float32Array = new Float32Array(buffer, 20, 1)
+</script>
+
+
+<pre><code id="showScript"></code></pre>
+<script>
+    main.innerText = `
+    uint8data:${uint8data}
+    uint8Array:${uint8Array}
+
+    int32Array:${int32Array}
+    int16Array:${int16Array}
+    
+    int32data:${int32data}
+    `
+    showScript.innerText = `${script.innerText}`
+</script>

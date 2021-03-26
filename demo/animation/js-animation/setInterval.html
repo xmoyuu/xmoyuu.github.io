@@ -1,0 +1,16 @@
+<body>
+    <button id="button" style="position:relative">button</button>
+</body>
+
+<script>
+    button.onclick = () => {
+        start = Date.now()
+        timer = setInterval(
+            () => {
+                time = Date.now() - start
+                button.style.left = `${time / 5}px`
+                if (time > 2000) clearInterval(timer)
+            },
+            20)
+    }
+</script>

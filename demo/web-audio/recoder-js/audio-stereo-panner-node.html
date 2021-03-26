@@ -1,0 +1,74 @@
+<body>
+    <audio src="Hanser.mp3" type="audio/mpeg"></audio>
+    <button data-playing="false" role="switch" aria-checked="false">
+        <span>Play/Pause</span>
+    </button>
+    <input type="range" id="volume" min="0" max="2" value="1" step="0.01">
+    <input type="range" id="panner" min="-1" max="1" value="0" step="0.01">
+</body>
+
+<script src="recorder.js"></script>
+<script>
+    audioContext = new window.AudioContext()
+
+    audioElement = document.querySelector('audio')
+    sourceNode = audioContext.createMediaElementSource(audioElement)
+    gainNode = audioContext.createGain()
+    pannerOptions = { pan: 0 }
+    stereoPannerNode = new StereoPannerNode(audioContext, pannerOptions)
+    sourceNode.connect(gainNode).connect(stereoPannerNode).connect(audioContext.destination)
+
+    volumeControl = document.querySelector('#volume')
+    volumeControl.addEventListener('input', function () {
+        gainNode.gain.value = this.value
+    }, false)
+
+    pannerControl = document.querySelector('#panner')
+    pannerControl.addEventListener('input', function () {
+        stereoPannerNode.pan.value = this.value
+    }, false)
+
+    playButton = document.querySelector('button')
+    playButton.addEventListener('click', function () {
+        // check if context is in suspended state (autoplay policy)
+        if (audioContext.state === 'suspended') {
+            audioContext.resume()
+        }
+        // play or pause track depending on state
+        if (this.dataset.playing === 'false') {
+            rec = new Recorder(stereoPannerNode)
+            // start recording
+            audioElement.play()
+            rec.record()
+            this.dataset.playing = 'true'
+        } else if (this.dataset.playing === 'true') {
+            audioElement.pause()
+            rec.stop()
+            // export it to WAV
+            rec.exportWAV(function (e) {
+                console.log(e)
+                saveBlob(e, '1.wav')
+                rec.clear()
+                console.log('clear')
+            })
+            this.dataset.playing = 'false'
+        }
+    }, false)
+
+    audioElement.addEventListener('ended', () => {
+        playButton.dataset.playing = 'false'
+    }, false)
+
+    saveBlob = (function () {
+        a = document.createElement('a')
+        document.body.appendChild(a)
+        a.style = 'display: none'
+        return function (blob, fileName) {
+            url = window.URL.createObjectURL(blob)
+            a.href = url
+            a.download = fileName
+            a.click()
+            window.URL.revokeObjectURL(url)
+        }
+    }())
+</script>

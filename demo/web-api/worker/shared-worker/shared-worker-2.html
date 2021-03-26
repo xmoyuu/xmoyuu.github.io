@@ -1,0 +1,19 @@
+<body>
+    <label for="number">number: </label>
+    <input type="text" id="number" value="0" autocomplete="off">
+    <output id="result"></output>
+</body>
+
+<script>
+    if (SharedWorker) {
+        sharedWorker = new SharedWorker('shared-worker.js')
+
+        number.oninput = () => {
+            sharedWorker.port.postMessage([number.value, number.value])
+        }
+
+        sharedWorker.port.onmessage = event => {
+            result.textContent = event.data
+        }
+    }
+</script>

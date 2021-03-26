@@ -1,0 +1,65 @@
+/* ==UserStyle==
+@name           Solidot Dark
+@namespace      xmoyuu
+@version        1.0.0
+@description    Solidot Dark
+@updateURL      https://xmoyuu.github.io/data/user-css/solidot-dark.user.css
+@author         xmoyuu
+==/UserStyle== */
+
+@-moz-document domain("solidot.org") {
+    #content article div #article-text, .dropdown ul li a, .dropdown ul li b, .reply>span, article a, article div, article h2, article i, article p {
+        color: #c5c8c6!important
+    }
+    #cambrian0, #comments h4 {
+        display: none
+    }
+    body {
+        background: #1e3736!important
+    }
+    #menu1 {
+        background: rgba(55, 71, 79, .9)
+    }
+    .dropdown ul li a:hover {
+        background: rgba(45, 61, 69, .9)
+    }
+    article i {
+        border-left: 5px solid #c5c8c6!important
+    }
+    article .badge.date {
+        background-color: #3070c8!important
+    }
+    #container>.page>a, #content article div a, #replylist a, .pull-right, .reply a, article u {
+        color: #5ac1c1!important
+    }
+    article {
+        border-bottom: 1px #285d5d solid
+    }
+    .btm {
+        border: none!important
+    }
+    #comments h4 {
+        background: #1e3736;
+        border: none
+    }
+    #container fieldset {
+        color: #fff!important;
+        display: none
+    }
+    #container legend {
+        background: #374745!important;
+        color: #fff!important
+    }
+    #replylist .talk_time {
+        background: rgba(95, 111, 119, .4)!important
+    }
+    #replylist .user {
+        color: #64cbcb!important
+    }
+    #replylist .p_text, #replylist .reply_ul {
+        color: #c5c8c6!important
+    }
+    .container label, [class="btn btn-primary pull-right"] {
+        color: #fff!important
+    }
+}

@@ -1,0 +1,43 @@
+<body>
+    <p>
+        滚动行为
+        <a href="https://developer.mozilla.org/docs/Web/CSS/scroll-behavior"> scroll-behavior</a>
+    </p>
+
+    <main id="main">
+        <section id="A">A</section>
+        <section id="B">B</section>
+        <section id="C">C</section>
+    </main>
+
+    <nav id="nav">
+        <a href="#A">A</a>
+        <a href="#B">B</a>
+        <a href="#C">C</a>
+    </nav>
+</body>
+
+<style id="style">
+    main {
+        height: 200px;
+        overflow-y: scroll;
+        scroll-behavior: smooth;
+    }
+
+    section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        font-size: 5em;
+    }
+</style>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showStyle"></code></pre>
+<script>
+    showHTML.innerText = `    ${main.outerHTML}
+    
+    ${nav.outerHTML}`
+    showStyle.innerText = `${style.innerText}`
+</script>

@@ -1,0 +1,71 @@
+
+<body>
+    <main id="main"></main>
+</body>
+
+<style id="style">
+    img {
+        width: 20%;
+    }
+</style>
+
+<script id="script">
+    fetchIndex('.')
+    function fetchIndex(url) {
+        fetch(url).then(function (response) {
+            return response.text()
+        })
+            .then(text => {
+                return new window.DOMParser().parseFromString(text, 'text/html')
+            })
+            .then(parsed => {
+                imageLinks = imageFilter(parsed.querySelectorAll('li>a'))
+                loadImage(naturalSort(imageLinks), main)
+            })
+    }
+
+    function imageFilter(link) {
+        imageLinks = []
+        link.forEach(element => {
+            href = element.href
+            hrefLowerCase = href.toLowerCase()
+            if (
+                hrefLowerCase.substr(-4) == '.jpg'
+                || hrefLowerCase.substr(-4) == '.png'
+                || hrefLowerCase.substr(-5) == '.jpeg'
+                || hrefLowerCase.substr(-5) == '.webp') {
+                imageLinks.push(href)
+            }
+        })
+        return imageLinks
+    }
+
+    function naturalSort(links) {
+        links.sort((a, b) => a.localeCompare(b, navigator.languages[0] || navigator.language, { numeric: true, ignorePunctuation: true }))
+        return links
+    }
+
+    function loadImage(imageLinks, element) {
+        for (index = 0; index < imageLinks.length; index++) {
+            figure = document.createElement('figure')
+            image = document.createElement('img')
+            figcaption = document.createElement('figcaption')
+
+            image.src = imageLinks[index]
+            image.id = index
+            figcaption.innerHTML = decodeURIComponent(imageLinks[index].split('/').pop())
+
+            figure.append(image, figcaption)
+            element.appendChild(figure)
+        }
+    }
+</script>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showStyle"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `    ${main.outerHTML}`
+    showStyle.innerText = `${style.innerText}`
+    showScript.innerText = `${script.innerText}`
+</script>

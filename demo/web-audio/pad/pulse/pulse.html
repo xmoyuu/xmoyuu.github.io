@@ -1,0 +1,24 @@
+<head>
+    <script>
+        audioContext = new window.AudioContext()
+
+        oscillatorNode = audioContext.createOscillator()
+        oscillatorNode.type = 'sine'
+        oscillatorNode.frequency.value = 880
+
+        oscillatorNodeLFO = audioContext.createOscillator()
+        oscillatorNodeLFO.type = 'square'
+        oscillatorNodeLFO.frequency.value = 30
+
+        gainNodeAMP = audioContext.createGain()
+        gainNodeAMP.gain.setValueAtTime(1, audioContext.currentTime)
+
+        pulseTime = 1
+
+        oscillatorNodeLFO.connect(gainNodeAMP.gain)
+        oscillatorNode.connect(gainNodeAMP).connect(audioContext.destination)
+        oscillatorNodeLFO.start()
+        oscillatorNode.start()
+        oscillatorNode.stop(audioContext.currentTime + pulseTime)
+    </script>
+</head>

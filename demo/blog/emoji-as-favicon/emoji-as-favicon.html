@@ -1,0 +1,45 @@
+<head>
+    <link rel="icon" type="image/png">
+    <link rel="apple-touch-icon">
+</head>
+
+<script id='script'>
+    icon = document.querySelector('link[rel=icon]')
+    appleTouchIcon = document.querySelector('link[rel=apple-touch-icon]')
+
+    emojiAsFavicon('🧐', -4, 28)
+    emojiAsAppleTouchIcon('🧐', 10, 150)
+
+    function emojiAsFavicon(emoji, x, y) {
+        canvas = document.createElement('canvas')
+        canvas.height = 32
+        canvas.width = 32
+        context = canvas.getContext('2d')
+        context.font = '28px serif'
+        context.fillText(emoji, x, y)
+        icon.href = canvas.toDataURL()
+
+        // string = `background:url('${canvas.toDataURL()}')no-repeat;font-size:32px;`
+        // console.log(`%c  `, string)
+    }
+
+    function emojiAsAppleTouchIcon(emoji, x, y) {
+        canvas = document.createElement('canvas')
+        canvas.height = 180
+        canvas.width = 180
+        context = canvas.getContext('2d')
+        context.font = '160px serif'
+        context.fillText(emoji, x, y)
+        appleTouchIcon.href = canvas.toDataURL()
+    }
+</script>
+
+<pre><code>      
+    &lt;link rel="icon" type="image/png">
+    &lt;link rel="apple-touch-icon">
+</code></pre>
+
+<pre><code id="showScript"></code></pre>
+<script>
+    showScript.innerText = `${script.innerText}`
+</script>

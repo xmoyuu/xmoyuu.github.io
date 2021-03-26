@@ -1,0 +1,79 @@
+<body>
+    <audio src="Hanser.mp3" type="audio/mpeg"></audio>
+    <canvas width="300" height="100"></canvas>
+    <button data-playing="false" role="switch" aria-checked="false">
+        <span>Play/Pause</span>
+    </button>
+</body>
+
+<script>
+    audioElement = document.querySelector('audio')
+
+    audioContext = new window.AudioContext()
+
+    sourceNode = audioContext.createMediaElementSource(audioElement)
+    analyserNode = audioContext.createAnalyser()
+
+    sourceNode.connect(analyserNode)
+    analyserNode.connect(audioContext.destination)
+
+    analyserNode.fftSize = 2048
+    // bufferLength = analyserNode.fftSize
+    bufferLength = analyserNode.frequencyBinCount
+    dataArray = new Uint8Array(bufferLength)
+
+    canvas = document.querySelector('canvas')
+    canvasCtx = canvas.getContext('2d')
+    WIDTH = canvas.width
+    HEIGHT = canvas.height
+
+    canvasCtx.clearRect(0, 0, WIDTH, HEIGHT)
+
+    function draw() {
+        drawVisual = requestAnimationFrame(draw)
+        analyserNode.getByteTimeDomainData(dataArray)
+        // analyserNode.getByteFrequencyData(dataArray)
+
+        canvasCtx.fillStyle = 'rgb(238, 238, 238)'
+        canvasCtx.fillRect(0, 0, WIDTH, HEIGHT)
+        canvasCtx.lineWidth = 2
+        canvasCtx.strokeStyle = 'rgb(0, 0, 0)'
+        canvasCtx.beginPath()
+        sliceWidth = WIDTH * 1.0 / bufferLength
+        x = 0
+        for (i = 0; i < bufferLength; i++) {
+            v = dataArray[i] / 128.0
+            y = v * HEIGHT / 2
+            if (i === 0) {
+                canvasCtx.moveTo(x, y)
+            } else {
+                canvasCtx.lineTo(x, y)
+            }
+            x += sliceWidth
+        }
+        canvasCtx.lineTo(canvas.width, canvas.height / 2)
+        canvasCtx.stroke()
+    }
+    draw()
+
+    playButton = document.querySelector('button')
+    playButton.addEventListener('click', function () {
+        // check if context is in suspended state (autoplay policy)
+        if (audioContext.state === 'suspended') {
+            audioContext.resume()
+        }
+        // play or pause track depending on state
+        if (this.dataset.playing === 'false') {
+            audioElement.play()
+            this.dataset.playing = 'true'
+        } else if (this.dataset.playing === 'true') {
+            audioElement.pause()
+            this.dataset.playing = 'false'
+        }
+    }, false)
+
+    audioElement.addEventListener('ended', () => {
+        playButton.dataset.playing = 'false'
+    }, false)
+
+</script>

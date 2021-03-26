@@ -1,0 +1,50 @@
+<body>
+    <main id="main"></main>
+</body>
+
+<script id="script">
+    webSocket = new WebSocket('ws://127.0.0.1:8080')
+
+    message = {
+        type: 'message',
+        text: 'hello',
+        date: Date.now(),
+    }
+
+    webSocket.onopen = event => {
+        webSocket.send(JSON.stringify(message))
+    }
+
+    webSocket.onmessage = event => {
+        main.textContent = event.data
+    }
+</script>
+
+<hr>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `    ${main.outerHTML}`
+    showScript.innerText = `${script.innerText}`
+</script>
+
+wss.js:
+<pre><code>      
+    const WebSocket = require('ws')
+
+    const wss = new WebSocket.Server({ port: 8080 })
+
+    wss.on(
+        'connection',
+        function connection(ws) {
+            ws.on(
+                'message',
+                function incoming(message) {
+                    console.log(`received: ${message}`)
+                }
+            )
+            ws.send('hi')
+        }
+    )
+</code></pre>

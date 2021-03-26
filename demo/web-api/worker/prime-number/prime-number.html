@@ -1,0 +1,11 @@
+<body>
+    <p>The highest prime number discovered so far is:</p>
+    <output id="result"></output>
+</body>
+
+<script>
+    worker = new Worker('worker.js')
+    worker.onmessage = event => {
+        result.value = event.data
+    }
+</script>

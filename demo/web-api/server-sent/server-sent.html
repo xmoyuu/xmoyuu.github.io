@@ -1,0 +1,58 @@
+<body>
+    <main id="main"></main>
+    <output id="output"></output>
+</body>
+
+<script id="script">
+    eventSource = new EventSource('http://127.0.0.1:8844/server-sent')
+
+    eventSource.onopen = event => {
+        output.innerHTML += '<p>onopen...</p>'
+    }
+
+    eventSource.addEventListener('customevent', event => {
+        output.innerHTML += (`<p>customevent: ${event.data}</p>`)
+    })
+
+    eventSource.onconnecttime = eventSource.onmessage = event => {
+        output.innerHTML += (`<p>onmessage: ${event.data}</p>`)
+    }
+
+    eventSource.onerror = event => {
+        output.innerHTML += '<p>onerror</p>'
+    }
+</script>
+
+<hr>
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `${main.innerHTML}`
+    showScript.innerText = `${script.innerText}`
+</script>
+
+server.js:
+<pre><code>      
+http = require('http')
+
+http.createServer((req, res) => {
+    if (req.url === '/server-sent') {
+        res.writeHead(200, {
+            'Content-Type': 'text/event-stream',
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive',
+            'Access-Control-Allow-Origin': '*',
+        })
+        res.write('retry: 10000\n')
+        res.write('event: customevent\n')
+        res.write(`data: ${new Date()}\n\n`)
+        interval = setInterval(() => {
+            res.write(`data: ${new Date()}\n\n`)
+        }, 1000)
+
+        req.connection.addListener('close', () => {
+            clearInterval(interval)
+        })
+    }
+}).listen(8844, '127.0.0.1')
+</code></pre>

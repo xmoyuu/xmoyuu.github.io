@@ -1,0 +1,60 @@
+<body>
+    <p>背景混合模式 <a href="https://developer.mozilla.org/docs/Web/CSS/background-blend-mode">background-blend-mode</a></p>
+    <main id="main">
+        <select id="select">
+            <option value="normal" selected>默认正常 normal</option>
+            <option value="multiply">乘-正片叠底 multiply</option>
+            <option value="screen">滤色 screen</option>
+            <option value="overlay">覆盖-叠加 overlay</option>
+            <option value="darken">变暗 darken</option>
+            <option value="lighten">变亮 lighten</option>
+            <option value="color-dodge">颜色减淡 color-dodge</option>
+            <option value="color-burn">颜色加深 color-burn</option>
+            <option value="hard-light">强光 hard-light</option>
+            <option value="soft-light">柔光 soft-light</option>
+            <option value="difference">差异 difference</option>
+            <option value="exclusion">排斥 exclusion</option>
+            <option value="hue">色调 hue</option>
+            <option value="saturation">饱和 saturation</option>
+            <option value="color">颜色 color</option>
+            <option value="luminosity">亮度 luminosity</option>
+        </select>
+    </main>
+</body>
+
+<style>
+    main {
+        width: 300px;
+        height: 300px;
+        background:
+            url('br.png'),
+            url('tr.png');
+        background-blend-mode: normal;
+    }
+</style>
+
+<script>
+    select.onchange = function (event) {
+        main.style.backgroundBlendMode = select.value
+        code.innerText = `
+    main {
+        width: 300px;
+        height: 300px;
+        background:
+            url('br.png'),
+            url('tr.png');
+        background-blend-mode: ${select.value};
+    }`
+    }
+</script>
+
+<pre><code id="code">      
+    main {
+        width: 300px;
+        height: 300px;
+        background:
+            url('br.png'),
+            url('tr.png');
+        background-blend-mode: normal;
+    }
+</code></pre>

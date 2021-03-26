@@ -1,0 +1,34 @@
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        showHTML.innerText = `    ${article.outerHTML}`
+        showScript.innerText = `${script.innerText}`
+    })
+</script>
+
+<body>
+    <article id="article"></article>
+</body>
+
+<script id='script'>
+    async function fetchGithubAPIContent(url) {
+        response = await fetch(url, {
+            headers:
+            {
+                'Accept': 'application/vnd.github.v3.html'
+            }
+        })
+        if (response.status === 404) {
+            return 404
+        } else {
+            text = await response.text()
+            return text
+        }
+    }
+    async function showArticle(element) {
+        url = 'https://api.github.com/repos/xmoyuu/xmoyuu.github.io/contents/blog/anchor.md'
+        element.innerHTML = await fetchGithubAPIContent(url)
+    }
+    showArticle(article)
+</script>

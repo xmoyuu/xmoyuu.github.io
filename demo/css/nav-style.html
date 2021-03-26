@@ -1,0 +1,41 @@
+<body>
+    <nav id="nav">
+        <ul>
+            <li><a href="">Home</a></li>
+            <li><a href="">Blog</a></li>
+            <li><a href="">About</a></li>
+        </ul>
+    </nav>
+</body>
+
+<style id="style">
+    nav>ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        font-weight: 800;
+        font-size: 2rem;
+    }
+
+    nav>ul>li {
+        padding: 1em 0;
+    }
+
+    nav>ul>li:not(:last-of-type) {
+        border-bottom: 1px solid rgba(0, 0, 0, .25);
+    }
+
+    nav>ul>li>a {
+        text-decoration: none;
+    }
+</style>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showStyle"></code></pre>
+<script>
+    showHTML.innerText = `    ${nav.outerHTML}`
+    showStyle.innerText = `${style.innerText}`
+</script>

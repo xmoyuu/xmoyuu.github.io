@@ -1,0 +1,46 @@
+<body>
+    <main id="main">
+        <h1 id="header">Header</h1>
+        <p id="p">The quick brown fox jumps over the lazy dog</p>
+        <input id="range" type="range" value="600" min="300" max="1300">
+        <input id="checkbox" type="checkbox" checked>
+    </main>
+</body>
+
+
+<script id="script">
+    main.style.width = '600'
+
+    resizeObserver = new ResizeObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.contentBoxSize) {
+                header.style.fontSize = Math.max(1.5, entry.contentBoxSize.inlineSize / 200) + 'rem'
+                p.style.fontSize = Math.max(1, entry.contentBoxSize.inlineSize / 600) + 'rem'
+            } else {
+                header.style.fontSize = Math.max(1.5, entry.contentRect.width / 200) + 'rem'
+                p.style.fontSize = Math.max(1, entry.contentRect.width / 600) + 'rem'
+            }
+        })
+    })
+
+    resizeObserver.observe(main)
+
+    range.addEventListener('input', () => {
+        main.style.width = range.value
+    })
+
+    checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+            resizeObserver.observe(main)
+        } else {
+            resizeObserver.unobserve(main)
+        }
+    })
+</script>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `    ${main.outerHTML}`
+    showScript.innerText = `${script.innerText}`
+</script>

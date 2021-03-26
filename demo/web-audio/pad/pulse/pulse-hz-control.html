@@ -1,0 +1,45 @@
+<body>
+    <label for="hz">Hz</label>
+    <input name="hz" id="hz" type="range" min="660" max="1320" value="880" step="1" />
+    
+    <label for="lfo">LFO</label>
+    <input name="lfo" id="lfo" type="range" min="20" max="40" value="30" step="1" />
+</body>
+
+<script>
+    audioContext = new window.AudioContext()
+
+    pulseHz = 880
+    hzControl = document.querySelector('#hz')
+    hzControl.addEventListener('input', function () {
+        pulseHz = Number(this.value)
+        playPulse()
+    }, false)
+
+    lfoHz = 30
+    lfoControl = document.querySelector('#lfo')
+    lfoControl.addEventListener('input', function () {
+        lfoHz = Number(this.value)
+        playPulse()
+    }, false)
+
+    pulseTime = 1
+    function playPulse() {
+        oscillatorNode = audioContext.createOscillator()
+        oscillatorNode.type = 'sine'
+        oscillatorNode.frequency.setValueAtTime(pulseHz, audioContext.currentTime)
+
+        oscillatorNodeLFO = audioContext.createOscillator()
+        oscillatorNodeLFO.type = 'square'
+        oscillatorNodeLFO.frequency.setValueAtTime(lfoHz, audioContext.currentTime)
+
+        gainNodeAMP = audioContext.createGain()
+        gainNodeAMP.gain.setValueAtTime(1, audioContext.currentTime)
+
+        oscillatorNodeLFO.connect(gainNodeAMP.gain)
+        oscillatorNode.connect(gainNodeAMP).connect(audioContext.destination)
+        oscillatorNodeLFO.start()
+        oscillatorNode.start()
+        oscillatorNode.stop(audioContext.currentTime + pulseTime)
+    }
+</script>

@@ -1,0 +1,28 @@
+<script id="script">
+    async function delay(s) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(2)
+            }, s * 1000)
+        })
+    }
+
+    timer()
+    async function timer() {
+        await delay(60 - new Date().getSeconds())
+        check()
+        setInterval(() => {
+            check()
+        }, 60 * 1000)
+    }
+
+    check()
+    function check() {
+        alert('hello')
+    }
+</script>
+
+<pre><code id="showScript"></code></pre>
+<script>
+    showScript.innerText = `${script.innerText}`
+</script>

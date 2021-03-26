@@ -1,0 +1,11 @@
+{
+    "editor.formatOnPaste": true,
+    "editor.minimap.enabled": false,
+    "editor.mouseWheelZoom": true,
+    "editor.wordWrap": "bounded",
+    "terminal.integrated.cursorBlinking": true,
+    "terminal.integrated.cursorStyle": "line",
+    "workbench.activityBar.visible": false,
+    "window.title": "${dirty}${activeEditorMedium}${separator}${appName}",
+    "liveServer.settings.AdvanceCustomBrowserCmdLine": "C:\\Program Files\\Firefox Developer Edition\\firefox.exe"
+}

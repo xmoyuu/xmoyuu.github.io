@@ -1,0 +1,16 @@
+<script>
+    let xhr = new XMLHttpRequest()
+    xhr.open('GET', 'rgba.png')
+    xhr.responseType = 'arraybuffer'
+
+    xhr.onload = function () {
+        arrayBufferView = new Uint8Array(xhr.response)
+        // arrayBufferView = [...arrayBufferView].map(x => x.toString(16))
+        array = new Array
+        for (i = 0; i < arrayBufferView.length; i += 4) {
+            array.push(arrayBufferView.slice(i, i + 4))
+        }
+        console.table(array)
+    }
+    xhr.send()
+</script>

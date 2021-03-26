@@ -1,0 +1,104 @@
+<main id="main">
+    <ul id="ul"></ul>
+
+    <label for="todo">todo:</label>
+    <input id="todo" type="text" required>
+
+    <label for="date">date:</label>
+    <input id="date" type="date" required>
+
+    <label for="time">time:</label>
+    <input id="time" type="time" required>
+
+    <button id="add">+</button>
+</main>
+
+<script id="script">
+    function getDateLocaleJSON() {
+        let date = new Date()
+        let time = date.getTime()
+        timezoneOffset = date.getTimezoneOffset() * 60000
+        return new Date(time - timezoneOffset).toJSON()
+    }
+
+    setInputDateTime()
+    function setInputDateTime() {
+        dateLocaleJSON = getDateLocaleJSON()
+        currentDate = dateLocaleJSON.slice(0, 10)
+        currentTime = dateLocaleJSON.slice(11, 16)
+
+        date.value = date.min = currentDate
+        time.value = currentTime
+    }
+
+    listItemArray = new Array()
+
+    function newListItem() {
+        return {
+            todo: todo.value,
+            date: date.value,
+            time: time.value,
+            notified: false,
+        }
+    }
+
+    function setLocalStorageAsJSON(name, object) {
+        localStorage.setItem(name, JSON.stringify(object))
+    }
+
+    function getLocalStorageJSONParse(name) {
+        return JSON.parse(localStorage[name])
+    }
+
+    add.onclick = () => {
+        listItem = newListItem()
+        listItemArray.push(listItem)
+        createListItem(listItem)
+        setLocalStorageAsJSON('todo', listItemArray)
+    }
+
+    function createListItem(listItem) {
+        li = document.createElement('li')
+        if (listItem.notified) li.style.color = 'rgba(255,0,0,1)'
+        li.innerText = `${listItem.todo}-${listItem.date}-${listItem.time}`
+        li.appendChild(createDeleteButton())
+        ul.appendChild(li)
+    }
+
+    function createDeleteButton() {
+        deleteButton = document.createElement('button')
+        deleteButton.innerText = 'X'
+        deleteButton.className = 'delete'
+        deleteButton.onclick = event => {
+            deleteButtonALL = document.querySelectorAll('.delete')
+            let deleteButtonIndex
+            for (let index = 0; index < deleteButtonALL.length; index++) {
+                const element = deleteButtonALL[index]
+                if (event.target === element) {
+                    deleteButtonIndex = index
+                }
+            }
+            listItemArray.splice(deleteButtonIndex, 1)
+            event.target.parentNode.parentNode.removeChild(event.target.parentNode)
+            setLocalStorageAsJSON('todo', listItemArray)
+        }
+        return deleteButton
+    }
+
+    showToDo()
+    function showToDo() {
+        if (localStorage['todo']) {
+            listItemArray = getLocalStorageJSONParse('todo')
+            for (const iterator of listItemArray) {
+                createListItem(iterator)
+            }
+        }
+    }
+</script>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `${main.innerHTML}`
+    showScript.innerText = `${script.innerText}`
+</script>

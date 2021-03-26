@@ -1,0 +1,36 @@
+<body>
+    <p>
+        通过控制
+        背景图片 <a href="https://developer.mozilla.org/docs/Web/CSS/background-image">background-image</a>
+        背景尺寸 <a href="https://developer.mozilla.org/docs/Web/CSS/background-size">background-size</a>
+        宽度从 0%
+        过渡 <a href="https://developer.mozilla.org/docs/Web/CSS/transition">transition</a>
+        到 100%
+        实现下划线动画
+    </p>
+</body>
+
+<style id="style">
+    a {
+        text-decoration: none;
+        background-image: linear-gradient(90deg, red, blue);
+        background-repeat: no-repeat;
+        background-position: bottom left;
+        background-size: 0% 2px;
+        transition: background-size 500ms ease-in-out;
+    }
+
+    a:hover {
+        background-size: 100% 2px;
+    }
+
+    ::selection {
+        background-color: rgba(238, 99, 82, 1);
+        color: white;
+    }
+</style>
+
+<pre><code id="showStyle"></code></pre>
+<script>
+    showStyle.innerText = `${style.innerText}`
+</script>

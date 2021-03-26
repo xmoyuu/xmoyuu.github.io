@@ -1,0 +1,45 @@
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showStyle"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        showHTML.innerText = `    ${goTop.outerHTML}`
+        showStyle.innerText = `${style.innerText}`
+        showScript.innerText = `${script.innerText}`
+    })
+</script>
+
+<div>
+    <script>
+        for (let i = 0; i < 2000; i++) document.writeln(i)
+    </script>
+</div>
+
+<body>
+    <div id="goTop" hidden>^</div>
+</body>
+
+<style id="style">
+    #goTop {
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 1em;
+
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+
+        cursor: pointer;
+    }
+</style>
+
+<script id="script">
+    goTop.onclick = () => {
+        window.scrollTo(pageXOffset, 0)
+    }
+    window.addEventListener('scroll', () => {
+        goTop.hidden = !(document.body.scrollTop > 20 || document.documentElement.scrollTop > 20)
+    })
+</script>

@@ -1,0 +1,18 @@
+<head>
+    <script src="wavetable.js"></script>
+    <script>
+        audioContext = new window.AudioContext()
+
+        periodicWave = audioContext.createPeriodicWave(wavetable.real, wavetable.imag)
+
+        function playSweep() {
+            oscillatorNode = audioContext.createOscillator()
+            oscillatorNode.setPeriodicWave(periodicWave)
+            oscillatorNode.frequency.value = 440
+            oscillatorNode.connect(audioContext.destination)
+            oscillatorNode.start()
+            oscillatorNode.stop(audioContext.currentTime + 1)
+        }
+        playSweep()
+    </script>
+</head>

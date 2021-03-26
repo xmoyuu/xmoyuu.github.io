@@ -1,0 +1,73 @@
+<body>
+    <canvas id="canvas"></canvas>
+    <canvas id="output"></canvas>
+</body>
+
+<script>
+    context = canvas.getContext('2d')
+    outputContext = output.getContext('2d')
+
+    image = new Image()
+    image.src = '清姬-bilibiliID-12662707-BY-Bison仓鼠仓-bilibiliUID-136107-NC.jpg'
+
+    crop = {
+        x: 0,
+        y: 0,
+        width: 400,
+        height: 400,
+        padding: 5,
+    }
+
+    output.width = crop.width
+    output.height = crop.height
+
+    function canvasInitZoom(image, canvas, canvasSize) {
+        scale = image.width / image.height > 1 ?
+            canvasSize / image.width : canvasSize / image.height
+        canvas.width = image.width * scale
+        canvas.height = image.height * scale
+        return scale
+    }
+
+    function centre() {
+        crop.x = (canvas.width - crop.width) / 2
+        crop.y = (canvas.height - crop.height) / 2
+    }
+
+    function drawCrop(x, y, width, height) {
+        context.fillStyle = 'rgba(0,0,0,0.5)'
+        context.fillRect(0, 0, canvas.width, canvas.height)
+        context.clearRect(x, y, width, height)
+    }
+
+    function drawImage() {
+        context.globalCompositeOperation = 'destination-over'
+        context.drawImage(image,
+            0, 0, image.width, image.height,
+            0, 0, canvas.width, canvas.height,
+        )
+    }
+
+    function drawOutput() {
+        output.width = crop.width
+        output.height = crop.height
+
+        imageData = context.getImageData(crop.x, crop.y, crop.width, crop.height)
+        outputContext.putImageData(imageData, 0, 0)
+    }
+
+    function draw() {
+        context.clearRect(0, 0, canvas.width, canvas.height)
+        outputContext.clearRect(0, 0, output.width, output.height)
+
+        centre()
+        drawCrop(crop.x, crop.y, crop.width, crop.height)
+        drawImage()
+        drawOutput()
+    }
+
+    image.onload = () => {
+        canvasInitZoom(image, canvas, 600)
+        draw()
+    }
+</script>

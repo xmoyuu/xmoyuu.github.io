@@ -1,0 +1,17 @@
+<button id="button">button</button>
+<style>
+    @keyframes go-left-right {
+        from {
+            left: 0px;
+        }
+
+        to {
+            left: calc(100% - 50px);
+        }
+    }
+
+    #button {
+        animation: go-left-right 3s infinite alternate;
+        position: relative;
+    }
+</style>

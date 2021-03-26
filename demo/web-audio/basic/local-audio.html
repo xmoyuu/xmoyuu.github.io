@@ -1,0 +1,40 @@
+<body>
+    <input type="file" onchange="playMusic.call(this)" class="select-file">
+    <audio class="audio-node" autoplay></audio>
+</body>
+
+<!-- <script>
+    function playMusic() {
+        if (!this.value) {
+            return
+        }
+        fileReader = new FileReader()
+        file = this.files[0]
+        fileReader.onload = function () {
+            arrayBuffer = this.result
+            console.log(arrayBuffer)
+            // 转成一个blob
+            blob = new Blob([new Int8Array(this.result)], {
+                type: 'audio/mp3' // files[0].type
+            })
+            // 生成一个本地的blob url
+            blobUrl = URL.createObjectURL(blob)
+            console.log(blobUrl)
+            // 给audio标签的src属性
+            document.querySelector('.audio-node').src = blobUrl
+
+        }
+        fileReader.readAsArrayBuffer(this.files[0])
+    }
+</script> -->
+
+<script>
+    function playMusic() {
+        if (!this.value) {
+            return
+        }
+        // 直接使用File对象生成blob url
+        blobUrl = URL.createObjectURL(this.files[0])
+        document.querySelector('.audio-node').src = blobUrl
+    }
+</script>

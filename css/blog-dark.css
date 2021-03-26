@@ -1,0 +1,120 @@
+/* scrollbar-dark */
+
+html {
+    scrollbar-color: rgb(77, 77, 77) rgb(23, 23, 23);
+}
+
+::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+}
+
+::-webkit-scrollbar-track-piece {
+    background-color: rgb(23, 23, 23);
+}
+
+::-webkit-scrollbar-thumb {
+    height: 30px;
+    background-color: rgb(77, 77, 77);
+}
+
+/* table-dark */
+
+table {
+    border-collapse: collapse;
+    border: 1px solid rgb(52, 52, 52);
+    letter-spacing: 1px;
+    font-size: 0.8rem;
+}
+
+td, th {
+    border: 1px solid rgb(52, 52, 52);
+    padding: 10px 20px;
+}
+
+th {
+    background-color: rgb(28, 28, 28);
+}
+
+td {
+    text-align: center;
+}
+
+tr:nth-child(even) td {
+    background-color: rgb(48, 48, 48);
+}
+
+tr:nth-child(odd) td {
+    background-color: rgb(38, 38, 38);
+}
+
+caption {
+    padding: 10px;
+}
+
+/* custom-dark */
+
+body {
+    background-color: rgb(33, 33, 33);
+    color: rgb(190, 190, 190);
+}
+
+#article {
+    background-color: rgb(24, 24, 24);
+}
+
+#article h1, #article h2 {
+    border-bottom: 1px solid rgb(52, 52, 52);
+}
+
+a {
+    color: rgb(64, 158, 255);
+}
+
+.highlight {
+    background-color: rgb(20, 20, 20);
+    border: 1px solid rgb(44, 44, 44);
+}
+
+blockquote {
+    border-left: .25em solid rgb(52, 52, 52);
+}
+
+code {
+    background-color: rgb(34, 34, 34);
+    border: 1px solid rgb(52, 52, 52);
+}
+
+.pl-ent {
+    color: #cda869;
+}
+
+.pl-e {
+    color: #ac885b;
+}
+
+.pl-c1, .pl-k {
+    color: #cf6a4c;
+}
+
+.pl-s {
+    color: #f9ee98;
+}
+
+.pl-en {
+    color: #ac885b;
+}
+
+.pl-c, .pl-c span {
+    color: #5f5a60;
+    font-style: italic;
+}
+
+.pl-smi {
+    color: rgb(190, 190, 190);
+}
+
+.pl-ii {
+    color: #fafbfc;
+    background-color: transparent;
+}

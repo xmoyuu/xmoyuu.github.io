@@ -1,0 +1,36 @@
+<body>
+    <nav id="nav">
+        <ul>
+            <li><a href="#/home">home</a></li>
+            <li><a href="#/about">about</a></li>
+        </ul>
+    </nav>
+    <main>
+        <article id="article">loading...</article>
+    </main>
+</body>
+
+<script id="script">
+    onHashChange()
+    addEventListener('hashchange', onHashChange)
+    function onHashChange() {
+        switch (location.hash) {
+            case '#/home':
+                article.innerHTML = 'home'
+                return
+            case '#/about':
+                article.innerHTML = 'about'
+                return
+            default:
+                return
+        }
+    }        
+</script>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText += `    ${nav.outerHTML}
+    ${article.outerHTML}`
+    showScript.innerText = `${script.innerText}`
+</script>

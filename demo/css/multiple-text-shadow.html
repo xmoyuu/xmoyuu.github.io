@@ -1,0 +1,23 @@
+<body>
+    多重文字阴影 <a href="https://developer.mozilla.org/docs/Web/CSS/text-shadow">text-shadow</a>
+    <p>multiple-text-shadow</p>
+</body>
+
+<style id="style">
+    * {
+        background-color: black;
+        color: white;
+    }
+
+    p {
+        font-size: 6em;
+        text-shadow:
+            -3px -0px 0 #68c8cf,
+            3px 0px 0 #ed1c51;
+    }
+</style>
+
+<pre><code id="showStyle"></code></pre>
+<script>
+    showStyle.innerText = `${style.innerText}`
+</script>

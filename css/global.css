@@ -1,0 +1,58 @@
+* {
+    font-family: Microsoft YaHei;
+}
+
+body {
+    line-height: 1.6;
+}
+
+.highlight {
+    padding: 16px;
+    font-family: Consolas;
+    margin-bottom: 16px;
+}
+
+.table-wrap, pre, p, .highlight {
+    overflow: auto;
+}
+
+.anchor {
+    display: none
+}
+
+#article {
+    padding: 16px;
+}
+
+#article h1, #article h2 {
+    padding-bottom: .3em;
+}
+
+blockquote {
+    padding: 0 1em;
+}
+
+code {
+    padding: 0em .4em;
+    border-radius: 3px;
+}
+
+img {
+    filter: brightness(90%);
+}
+
+a {
+    text-decoration: none;
+}
+
+#goTop {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 1em;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    cursor: pointer;
+}

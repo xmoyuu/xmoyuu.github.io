@@ -1,0 +1,27 @@
+<head>
+    <script>
+        audioContext = new window.AudioContext()
+
+        noiseLength = 5
+
+        bufferSize = audioContext.sampleRate * noiseLength
+        buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate)
+
+        data = buffer.getChannelData(0) // get data
+
+        // fill the buffer with noise
+        for (i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1
+        }
+
+        sourceNode = audioContext.createBufferSource()
+        sourceNode.buffer = buffer
+
+        biquadFilterNode = audioContext.createBiquadFilter()
+        biquadFilterNode.type = 'bandpass'
+        biquadFilterNode.frequency.value = 1000
+
+        sourceNode.connect(biquadFilterNode).connect(audioContext.destination)
+        sourceNode.start()
+    </script>
+</head>

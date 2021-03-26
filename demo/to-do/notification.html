@@ -1,0 +1,58 @@
+<main id="main">
+    <button id="ask">ask notification permission</button>
+    <button id="show">show notification</button>
+</main>
+
+<script id="script">
+    function emojiAsFavicon(emoji, x, y) {
+        canvas = document.createElement('canvas')
+        canvas.height = 32
+        canvas.width = 32
+        context = canvas.getContext('2d')
+        context.font = '28px serif'
+        context.fillText(emoji, x, y)
+        return canvas.toDataURL()
+    }
+
+    icon = emojiAsFavicon('🧐', -4, 28)
+    image = '2019-bilibiliID-11371674-BY-你的心弦有我来过-bilibiliUID-11134708-NC.jpg'
+
+    askNotificationPermission()
+    ask.onclick = () => {
+        askNotificationPermission()
+    }
+    function askNotificationPermission() {
+        if (window.Notification) {
+            Notification.requestPermission()
+                .then(result => {
+                    if (Notification.permission != 'default') {
+                        ask.hidden = true
+                    }
+                })
+        } else {
+            ask.hidden = true
+        }
+    }
+
+    function showNotification(title, body, icon, image) {
+        if (window.Notification) {
+            options = {
+                body: body,
+                icon: icon,
+                image: image,
+            }
+            new Notification(title, options)
+        }
+    }
+
+    show.addEventListener('click', () => {
+        showNotification('title', 'hello', icon, image)
+    })
+</script>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `${main.innerHTML}`
+    showScript.innerText = `${script.innerText}`
+</script>

@@ -1,0 +1,49 @@
+<body>
+    <label for="duration">Duration</label>
+    <input name="duration" id="duration" type="range" min="0" max="2" value="1" step="0.1" />
+    
+    <label for="band">Band</label>
+    <input name="band" id="band" type="range" min="400" max="1200" value="1000" step="5" />
+</body>
+
+<script>
+    audioContext = new window.AudioContext()
+
+    noiseDuration = 1
+    durControl = document.querySelector('#duration')
+    durControl.addEventListener('input', function () {
+        noiseDuration = Number(this.value)
+        playNoise()
+    }, false)
+
+    bandHz = 1000
+    bandControl = document.querySelector('#band')
+    bandControl.addEventListener('input', function () {
+        bandHz = Number(this.value)
+        playNoise()
+    }, false)
+
+    function playNoise() {
+        noiseLength = noiseDuration
+
+        bufferSize = audioContext.sampleRate * noiseLength
+        buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate)
+
+        data = buffer.getChannelData(0) // get data
+
+        // fill the buffer with noise
+        for (i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1
+        }
+
+        sourceNode = audioContext.createBufferSource()
+        sourceNode.buffer = buffer
+
+        biquadFilterNode = audioContext.createBiquadFilter()
+        biquadFilterNode.type = 'bandpass'
+        biquadFilterNode.frequency.value = bandHz
+
+        sourceNode.connect(biquadFilterNode).connect(audioContext.destination)
+        sourceNode.start()
+    }
+</script>

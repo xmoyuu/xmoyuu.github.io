@@ -1,0 +1,44 @@
+<head id="head"></head>
+
+<body id="body">
+    <script>
+        fetchIndex('.')
+        function fetchIndex(url) {
+            fetch(url).then(function (response) {
+                return response.text()
+            })
+                .then(text => {
+                    return new window.DOMParser().parseFromString(text, 'text/html')
+                })
+                .then(parsed => {
+                    head.innerHTML = parsed.head.innerHTML
+                    body.innerHTML += parsed.body.innerHTML
+                })
+                .then(() => {
+                    onPopState()
+                    addEventListener('popstate', onPopState)
+                    function onPopState() {
+                        switch (location.pathname) {
+                            default:
+                                console.log(location.pathname)
+                                return
+                        }
+                    }
+
+                    paths = document.querySelectorAll('a[href]')
+                    onLoad(paths)
+                    function onLoad(paths) {
+                        paths.forEach(element => {
+                            element.addEventListener('click', event => {
+                                event.preventDefault()
+                                history.pushState(null, '',
+                                    element.getAttribute('href'),
+                                )
+                                onPopState()
+                            })
+                        })
+                    }
+                })
+        }
+    </script>
+</body>

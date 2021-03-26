@@ -1,0 +1,36 @@
+WEBVTT - This file has cues.
+
+NOTE This is a comment
+
+NOTE
+Another comment that is spanning
+more than one line.
+
+NOTE You can also make a comment
+across more than one line this way.
+
+1
+00:00:00.000 --> 00:00:05.000
+Hello?
+
+2  - Title
+00:00:05.000 --> 00:00:10.000 position:10%,line-left align:left size:35%
+- This is cue?
+- Yes
+
+3
+00:00:10.000 --> 00:00:15.000 vertical:lr
+[ Applause ]
+<b>Awesome!</b>
+
+7
+00:00:15.000 --> 00:00:20.000
+<c.classname>text</c>
+<i>text</i>
+<b>text</b>
+<u>text</u>
+
+8
+00:00:20.000 --> 00:00:25.000
+<ruby>WWW<rt>World Wide Web</rt>oui<rt>yes</rt></ruby>
+<v Bob>text</v>

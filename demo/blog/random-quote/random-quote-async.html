@@ -1,0 +1,41 @@
+<body>
+    <blockquote id="blockquote"></blockquote>
+</body>
+
+<script id="script">
+    function getRandomInt(min, max) {
+        min = Math.ceil(min)
+        max = Math.floor(max)
+        return Math.floor(Math.random() * (max - min)) + min
+    }
+
+    async function fetchJson(path) {
+        response = await fetch(path)
+        if (response.status === 404) {
+            return 404
+        } else {
+            json = await response.json()
+            return json
+        }
+    }
+
+    async function showQuote(element) {
+        json = await fetchJson('quote.json')
+        random = getRandomInt(0, json.quote.length)
+        quote = json.quote[random]
+        element.innerHTML = `
+                            「${quote.content} 」${quote.author}
+                            ${quote.cite ? ` , <cite>${quote.cite}</cite>` : ''}
+                            ${quote.url ? ` <a href='${quote.url}'>🔗</a>` : ''}
+                            `
+    }
+
+    showQuote(blockquote)
+</script>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `    ${blockquote.outerHTML}`
+    showScript.innerText = `${script.innerText}`
+</script>

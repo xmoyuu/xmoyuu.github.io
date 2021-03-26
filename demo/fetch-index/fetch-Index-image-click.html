@@ -1,0 +1,96 @@
+<style>
+    body {
+        color: white;
+        background-color: black;
+    }
+
+    #fullImage {
+        object-fit: scale-down;
+        width: 100%;
+    }
+
+    #main img {
+        width: 20%;
+    }
+</style>
+
+
+<body>
+    <img id="fullImage" hidden=true>
+    <main id="main"></main>
+</body>
+
+<script>
+    fetchIndex('.')
+    function fetchIndex(url) {
+        fetch(url).then(function (response) {
+            return response.text()
+        })
+            .then(text => {
+                return new window.DOMParser().parseFromString(text, 'text/html')
+            })
+            .then(parsed => {
+                imageLinks = imageFilter(parsed.querySelectorAll('li>a'))
+                loadImage(naturalSort(imageLinks), main, fullImage)
+            })
+    }
+
+    function imageFilter(link) {
+        imageLinks = []
+        link.forEach(element => {
+            href = element.href
+            hrefLowerCase = href.toLowerCase()
+            if (
+                hrefLowerCase.substr(-4) == '.jpg'
+                || hrefLowerCase.substr(-4) == '.png'
+                || hrefLowerCase.substr(-5) == '.jpeg'
+                || hrefLowerCase.substr(-5) == '.webp') {
+                imageLinks.push(href)
+            }
+        })
+        return imageLinks
+    }
+
+    function naturalSort(links) {
+        links.sort((a, b) => a.localeCompare(b, navigator.languages[0] || navigator.language, { numeric: true, ignorePunctuation: true }))
+        return links
+    }
+
+    function loadImage(imageLinks, element, fullImage) {
+        for (index = 0; index < imageLinks.length; index++) {
+            figure = document.createElement('figure')
+            image = document.createElement('img')
+            figcaption = document.createElement('figcaption')
+
+            image.src = imageLinks[index]
+            image.id = index
+            figcaption.innerHTML = decodeURIComponent(imageLinks[index].split('/').pop())
+
+            figure.append(image, figcaption)
+            element.appendChild(figure)
+            image.onclick = event => {
+                fullImage.src = event.target.src
+                fullImage.id = event.target.id
+                fullImage.hidden = false
+                element.hidden = true
+            }
+        }
+
+        fullImage.onclick = event => {
+            id = parseInt(fullImage.id) + 1
+            if (id < imageLinks.length) {
+                fullImage.src = imageLinks[id]
+                fullImage.id = id
+            }
+            else {
+                fullImage.src = imageLinks[0]
+                fullImage.id = 0
+            }
+        }
+
+        fullImage.ondblclick = event => {
+            fullImage.hidden = true
+            element.hidden = false
+        }
+    }
+</script>

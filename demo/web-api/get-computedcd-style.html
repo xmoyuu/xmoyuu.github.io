@@ -1,0 +1,32 @@
+<main id="main">
+    <h3 id="h3">Generated content:</h3>
+    <p id="p"></p>
+</main>
+
+<style id="style">
+    h3::after {
+        content: 'rocks!';
+    }
+</style>
+
+<script id="script">
+    computedStyle = window.getComputedStyle(p)
+    p.textContent = `
+        font-size:${computedStyle.getPropertyValue('font-size')}
+        line-height: ${computedStyle.getPropertyValue('line-height')}
+    `
+
+    console.log(`
+            the generated content is:
+            ${getComputedStyle(h3, ': after').content}
+        `)
+</script>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showStyle"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `${main.innerHTML}`
+    showStyle.innerText = `${style.innerText}`
+    showScript.innerText = `${script.innerText}`
+</script>

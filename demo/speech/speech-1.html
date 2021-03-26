@@ -1,0 +1,36 @@
+<body>
+    <main id="main">
+        <button id="speak"> speak</button>
+    </main>
+
+    <script id="script">
+        textList = [
+            {
+                text: '法治是现代政府管理社会的最好方式，也是我们走出困境、走向明天的最佳选择。实际上，今天这个会就是在昨天和明天之间选择。我们面前摆着两条路，一是恢复和继续走全能政府即人治的老路，靠一位伟大领袖发号施令，用计划经济甚至专营的办法去解决经济领域层层盘剥的问题，靠学习领导人讲话或思想政治工作和道德教育去解决以权谋私、腐败堕落的问题，用加强纪律去解决思想、理论、文化界的是非问题，如果还是这样，小平同志就是活一百岁也解决不了我们的体制转变。',
+                lang: 'zh-CN'
+            },
+            {
+                text: 'My political ideal is democracy. Everyone should be respected as an individual, but no one idolized. It is an irony of fate that I should have been showered with so much uncalled-for and unmerited admiration and esteem. Perhaps this adulation springs from the unfulfilled wish of the multitude to comprehend the few ideas which I, with my weak powers, have advanced.',
+                lang: 'en-US'
+            }
+        ]
+
+        utterance0 = new SpeechSynthesisUtterance(textList[0].text)
+
+        utterance1 = new SpeechSynthesisUtterance()
+        utterance1.text = textList[1].text
+        utterance1.lang = textList[1].lang
+
+        document.getElementById("speak").onclick = function () {
+            speechSynthesis.speak(utterance0)
+            speechSynthesis.speak(utterance1)
+        }
+    </script>
+</body>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `${main.innerHTML}`
+    showScript.innerText = `${script.innerText}`
+</script>

@@ -1,0 +1,53 @@
+<body>
+    <progress value="0" max="100" id="progress"></progress>
+    <script id="innerworker" type="text/worker">
+        log = console.dir
+        
+        function sleep(ms) {
+            time = new Date().getTime()
+            while (new Date().getTime() < time + ms);
+        }
+
+        function generator(event) {
+            log(event.data)
+            for (let i = 0; i <= 100; i++) {
+                postMessage(i)
+                sleep(1000)
+            }
+            close()
+        }
+
+        onmessage = generator
+        // addEventListener('message', generator)
+    </script>
+</body>
+
+
+
+<script id="script">
+    blob = new Blob([document.querySelector('script[type=\'text\/worker\']').textContent])
+    url = URL.createObjectURL(blob)
+
+    if (Worker) {
+        worker = new Worker(url)
+        worker.postMessage('hello')
+        worker.onmessage = event => {
+            progress.value = event.data
+        }
+        worker.onerror = event => {
+            console.log(event.message)
+        }
+        if (progress.value == 100) {
+            worker.terminate()
+        }
+    } 
+</script>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `    ${progress.outerHTML}`
+    showScript.innerText = `    ${innerworker.outerHTML}
+    ${script.innerText}
+    `
+</script>

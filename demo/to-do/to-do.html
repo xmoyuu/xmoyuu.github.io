@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>to-do</title>
+</head>
+
+<body>
+    <ul id="ul"></ul>
+
+    <label for="todo">todo:</label>
+    <input id="todo" type="text" required>
+
+    <button id="add">+</button>
+    <button id="ask">ask notification permission</button>
+
+    <br>
+
+    <label for="date">date:</label>
+    <input id="date" type="date" required>
+
+    <label for="time">time:</label>
+    <input id="time" type="time" required>
+</body>
+
+<script>
+    function getDateLocaleJSON() {
+        let date = new Date()
+        let time = date.getTime()
+        timezoneOffset = date.getTimezoneOffset() * 60000
+        return new Date(time - timezoneOffset).toJSON()
+    }
+
+    setInputDateTime()
+    function setInputDateTime() {
+        dateLocaleJSON = getDateLocaleJSON()
+        currentDate = dateLocaleJSON.slice(0, 10)
+        currentTime = dateLocaleJSON.slice(11, 16)
+
+        date.value = date.min = currentDate
+        time.value = currentTime
+    }
+
+    askNotificationPermission()
+    ask.onclick = () => {
+        askNotificationPermission()
+    }
+    function askNotificationPermission() {
+        if (window.Notification) {
+            Notification.requestPermission()
+                .then(result => {
+                    if (Notification.permission != 'default') {
+                        ask.hidden = true
+                    }
+                })
+        } else {
+            ask.hidden = true
+        }
+    }
+
+    function showNotification(title, body) {
+        if (window.Notification) {
+            options = {
+                body: body,
+            }
+            new Notification(title, options)
+        }
+    }
+
+    listItemArray = new Array()
+
+    function newListItem() {
+        return {
+            todo: todo.value,
+            date: date.value,
+            time: time.value,
+            notified: false,
+        }
+    }
+
+    function setLocalStorageAsJSON(name, object) {
+        localStorage.setItem(name, JSON.stringify(object))
+    }
+
+    function getLocalStorageJSONParse(name) {
+        return JSON.parse(localStorage[name])
+    }
+
+    add.onclick = () => {
+        listItem = newListItem()
+        listItemArray.push(listItem)
+        createListItem(listItem)
+        setLocalStorageAsJSON('todo', listItemArray)
+    }
+
+    function createListItem(listItem) {
+        li = document.createElement('li')
+        if (listItem.notified) li.style.color = 'rgba(255,0,0,1)'
+        li.innerText = `${listItem.todo}-${listItem.date}-${listItem.time}`
+        li.appendChild(createDeleteButton())
+        ul.appendChild(li)
+    }
+
+    function createDeleteButton() {
+        deleteButton = document.createElement('button')
+        deleteButton.innerText = 'X'
+        deleteButton.className = 'delete'
+        deleteButton.onclick = event => {
+            deleteButtonALL = document.querySelectorAll('.delete')
+            let deleteButtonIndex
+            for (let index = 0; index < deleteButtonALL.length; index++) {
+                const element = deleteButtonALL[index]
+                if (event.target === element) {
+                    deleteButtonIndex = index
+                }
+            }
+            listItemArray.splice(deleteButtonIndex, 1)
+            event.target.parentNode.parentNode.removeChild(event.target.parentNode)
+            setLocalStorageAsJSON('todo', listItemArray)
+        }
+        return deleteButton
+    }
+
+    showToDo()
+    function showToDo() {
+        if (localStorage['todo']) {
+            listItemArray = getLocalStorageJSONParse('todo')
+            for (const iterator of listItemArray) {
+                createListItem(iterator)
+            }
+        }
+    }
+
+    async function delay(s) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(2)
+            }, s * 1000)
+        })
+    }
+
+    timer()
+    async function timer() {
+        await delay(60 - new Date().getSeconds())
+        check()
+        setInterval(() => {
+            check()
+        }, 60 * 1000)
+    }
+
+    function dash2slash(string) {
+        return string.split('-').join('/')
+    }
+
+    check()
+    function check() {
+        for (const iterator of listItemArray) {
+            if (!iterator.notified) {
+                let date = new Date(`${dash2slash(iterator.date)} ${iterator.time}`)
+                if (date < new Date()) {
+                    iterator.notified = true
+                    showNotification('todo', iterator.todo)
+                }
+            }
+        }
+        setLocalStorageAsJSON('todo', listItemArray)
+        refreshView()
+    }
+
+    function refreshView() {
+        ul.innerHTML = ''
+        showToDo()
+    }
+</script>
+
+</html>

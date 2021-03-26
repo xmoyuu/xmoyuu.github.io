@@ -1,0 +1,50 @@
+<body>
+    <nav id="nav">
+        <ul>
+            <li><a href="/home">home</a></li>
+            <li><a href="/about">about</a></li>
+        </ul>
+    </nav>
+    <main>
+        <article id="article">loading...</article>
+    </main>
+</body>
+
+<script id="script">
+    onPopState()
+    addEventListener('popstate', onPopState)
+    function onPopState() {
+        switch (location.pathname) {
+            case '/home':
+                article.innerHTML = 'home'
+                return
+            case '/about':
+                article.innerHTML = 'about'
+                return
+            default:
+                return
+        }
+    }
+
+    paths = document.querySelectorAll('a[href]')
+    onLoad(paths)
+    function onLoad(paths) {
+        paths.forEach(element => {
+            element.addEventListener('click', event => {
+                event.preventDefault()
+                history.pushState(null, '',
+                    element.getAttribute('href'),
+                )
+                onPopState()
+            })
+        })
+    }
+</script>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText += `    ${nav.outerHTML}
+    ${article.outerHTML}`
+    showScript.innerText = `${script.innerText}`
+</script>

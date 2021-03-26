@@ -1,0 +1,40 @@
+<body>
+    <input type="file" id="input" accept="image/*">
+    <main id="main"></main>
+    <canvas id="canvas"></canvas>
+</body>
+
+<script>
+    context = canvas.getContext('2d')
+    input.addEventListener('change', readImage)
+    canvas.addEventListener('mousemove', event => {
+        offsetX = event.offsetX > 0 ? event.offsetX : 0
+        offsetY = event.offsetY > 0 ? event.offsetY : 0
+        data = context.getImageData(offsetX, offsetY, 1, 1).data
+        main.innerHTML = `
+        offsetX:${offsetX}
+        offsetY:${offsetY}
+        rgba:${data[0]},${data[1]},${data[2]},${data[3]}
+        `
+    })
+
+    function readImage(event) {
+        fileReader = new FileReader()
+        fileReader.readAsDataURL(event.target.files[0])
+        fileReader.onloadend = event => {
+            if (event.target.readyState == FileReader.DONE) {
+                draw(fileReader.result)
+            }
+        }
+    }
+
+    function draw(URL) {
+        image = new Image()
+        image.src = URL
+        image.onload = () => {
+            canvas.width = image.width
+            canvas.height = image.height
+            context.drawImage(image, 0, 0)
+        }
+    }
+</script>

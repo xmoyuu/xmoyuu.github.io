@@ -1,0 +1,19 @@
+<head>
+    <script src="md5.js"></script>
+    <script>
+        length = 1
+        maxLength = 5
+        arrayBuffer = new ArrayBuffer(maxLength)
+        uint8Array = new Uint8Array(arrayBuffer)
+        // a-z 97-122
+        uint8Array[0] = 104
+        uint8Array[1] = 101
+        uint8Array[2] = 108
+        uint8Array[3] = 108
+        uint8Array[4] = 111
+        console.log(uint8Array)
+        string = String.fromCharCode.apply(null, uint8Array)
+        console.log(string)
+        console.log(md5('hello'))
+    </script>
+</head>

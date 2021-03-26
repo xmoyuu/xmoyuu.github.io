@@ -1,0 +1,54 @@
+<body>
+    <main id="main">
+        <div class="fill"></div>
+        <section id="section"></section>
+        <div class="fill"></div>
+    </main>
+</body>
+
+<script id="script">
+    ratio = 0
+    intersectionObserver = new IntersectionObserver(
+        (entries, observer) => {
+            entries.forEach((entry) => {
+                section = entry.target
+                if (entry.intersectionRatio > ratio) {
+                    section.style.backgroundColor = `rgba(40, 40, 190,${entry.intersectionRatio})`
+                } else {
+                    section.style.backgroundColor = `rgba(190, 40, 40, ${entry.intersectionRatio})`
+                }
+                ratio = entry.intersectionRatio
+            })
+        },
+        {
+            root: main,
+            rootMargin: '0px',
+            threshold: [0, 0.5, 1]
+        }
+    )
+    intersectionObserver.observe(section)
+</script>
+
+<style>
+    main {
+        height: 300px;
+        overflow-y: scroll;
+    }
+
+    section {
+        width: 100%;
+        height: 300px;
+        transition: background-color 1s;
+    }
+
+    .fill {
+        height: 300px
+    }
+</style>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `    ${main.outerHTML}`
+    showScript.innerText = `${script.innerText}`
+</script>

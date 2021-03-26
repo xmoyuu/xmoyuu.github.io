@@ -1,0 +1,22 @@
+<style>
+    video::cue {
+        background-image: linear-gradient(to bottom, dimgray, lightgray);
+        color: papayawhip;
+    }
+
+    /* Just work in chrome */
+    video::cue(b) {
+        color: peachpuff;
+    }
+</style>
+
+<body>
+    <p>
+        WebVTT(Web Video Text Tracks 视频文本轨)
+        WebVTT 是基于文本使用 UTF-8 编码的格式，
+        MIME 类型为 text/vtt
+    </p>
+    <video controls src="woody-woodpecker-pantry-panic-512kb.mp4">
+        <track default src="vtt.vtt">
+    </video>
+</body>

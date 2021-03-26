@@ -1,0 +1,47 @@
+<body>
+    <p>
+        <a href="https://material.io/resources/icons/">icons</a>
+        <a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/filter">filter</a>
+        <a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/mask">mask</a>
+        <a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/blend-mode">blend-mode</a>
+    </p>
+
+    <main id="main">
+        <img src="baseline-star-24px.svg" id="invert">
+        <div id="mask"></div>
+        <div id="blend"></div>
+    </main>
+
+    <style id="style">
+        #invert {
+            background-color: white;
+            filter: invert(100%);
+        }
+
+        /* need server support */
+        #mask {
+            display: inline-block;
+            background-color: #0000ff;
+            width: 24px;
+            height: 24px;
+            mask: url(baseline-star-24px.svg);
+            -webkit-mask: url(baseline-star-24px.svg);
+        }
+
+        /* special need white background without alpha */
+        #blend {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            background-image: url(baseline-star-black-18dp.png), linear-gradient(#0000ff, #0000ff);
+            background-blend-mode: lighten;
+        }
+    </style>
+</body>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showStyle"></code></pre>
+<script>
+    showHTML.innerText = `${main.innerHTML}`
+    showStyle.innerText = `${style.innerText}`
+</script>

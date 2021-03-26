@@ -1,0 +1,53 @@
+<style>
+    button {
+        position: relative;
+        left: 0;
+        /* transition: left 5s cubic-bezier(0, 0, 1, 1); */
+        /* transition: left 5s cubic-bezier(0.0, 0.5, 0.5, 1.0); */
+        /* transition: left 5s ease-out; */
+        /* transition: left 5s cubic-bezier(.5, -1, .5, 2) */
+
+        margin-left: 0;
+        transition: margin-left 3s ease-in-out;
+    }
+
+    .back {
+        transform: scaleX(-1);
+        filter: fliph;
+    }
+</style>
+
+
+<body>
+    <button id="button">button</button>
+</body>
+
+<script>
+    // button.onclick = () => {
+    //     button.style.left = '450px'
+    // }
+
+    button.onclick = function () {
+
+        let times = 1;
+
+        function go() {
+            if (times % 2) {
+                button.classList.remove('back');
+                button.style.marginLeft = 100 * times + 200 + 'px';
+            } else {
+
+                button.classList.add('back');
+                button.style.marginLeft = 100 * times - 200 + 'px';
+            }
+
+        }
+
+        go();
+
+        button.addEventListener('transitionend', function () {
+            times++;
+            go();
+        });
+    };
+</script>

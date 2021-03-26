@@ -1,0 +1,41 @@
+<body>
+    <label for="rate">Rate</label>
+    <input name="rate" id="rate" type="range" min="0.1" max="2" value="1" step="0.1" />
+</body>
+
+<script>
+    audioContext = new window.AudioContext()
+
+    playbackRate = 1
+    rateControl = document.querySelector('#rate')
+    rateControl.addEventListener('input', function () {
+        playbackRate = Number(this.value)
+        setupSample()
+            .then((sample) => {
+                dtmf = sample // to be used in our playSample function
+                playSample(audioContext, dtmf)
+            })
+    }, false)
+
+    async function getFile(audioContext, filepath) {
+        response = await fetch(filepath)
+        arrayBuffer = await response.arrayBuffer()
+        audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
+        return audioBuffer
+    }
+
+    async function setupSample() {
+        filePath = 'dtmf.mp3'
+        sample = await getFile(audioContext, filePath)
+        return sample
+    }
+
+    function playSample(audioContext, audioBuffer) {
+        sampleSource = audioContext.createBufferSource()
+        sampleSource.buffer = audioBuffer
+        sampleSource.playbackRate.setValueAtTime(playbackRate, audioContext.currentTime)
+        sampleSource.connect(audioContext.destination)
+        sampleSource.start()
+        return sampleSource
+    }
+</script>

@@ -1,0 +1,48 @@
+<head>
+    <script>
+        asyncEval = (() => {
+            worker = new Worker(`
+            data:text/javascript
+            charset=US-ASCII,
+            onmessage=event=>{
+                postMessage({
+                    'id':event.data.id,
+                    'evaluated':eval(event.data.string)
+                    })
+                }
+            `)
+
+            list = []
+            worker.onmessage = event => {
+                if (list[event.data.id]) {
+                    list[event.data.id](event.data.evaluated)
+                }
+                delete list[event.data.id]
+            }
+
+            return (string, fn) => {
+                list.push(fn || null)
+                worker.postMessage({
+                    'id': list.length - 1,
+                    'string': string
+                })
+            }
+        }
+        )()
+
+        asyncEval('3 + 2', message => {
+            alert(`3 + 2 = ${message}`)
+        })
+
+        asyncEval('"Hello World!"', string => {
+            document.body.appendChild(document.createTextNode(string))
+        })
+
+        asyncEval(`(function () {
+            request = new XMLHttpRequest()
+            request.open('get', 'http://www.mozilla.org/', false)
+            request.send(null)
+            return request.responseText
+            })()`)
+    </script>
+</head>

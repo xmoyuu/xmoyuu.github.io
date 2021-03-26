@@ -1,0 +1,29 @@
+<body>
+    <blockquote id="blockquote"></blockquote>
+</body>
+
+<script>
+    randomQuote('quote.json', blockquote)
+    function randomQuote(path, element) {
+        if (Worker) {
+            worker = new Worker('worker.js')
+            worker.postMessage(path)
+            worker.onmessage = event => {
+                if (event.data === 404) {
+                    element.innerHTML = `404:${path}`
+                }
+                else {
+                    quote = event.data
+                    element.innerHTML = `
+                    「${quote.content} 」${quote.author}
+                    ${quote.cite ? ` , <cite>${quote.cite}</cite>` : ''}
+                    ${quote.url ? ` <a href='${quote.url}'>🔗</a>` : ''}
+                    `
+                }
+            }
+            worker.onerror = event => {
+                console.log(event.message)
+            }
+        }
+    }
+</script>

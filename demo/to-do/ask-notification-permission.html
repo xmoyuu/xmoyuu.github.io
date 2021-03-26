@@ -1,0 +1,29 @@
+<main id="main">
+    <button id="ask">ask notification permission</button>
+</main>
+
+<script id="script">
+    askNotificationPermission()
+    ask.onclick = () => {
+        askNotificationPermission()
+    }
+    function askNotificationPermission() {
+        if (window.Notification) {
+            Notification.requestPermission()
+                .then(result => {
+                    if (Notification.permission != 'default') {
+                        ask.hidden = true
+                    }
+                })
+        } else {
+            ask.hidden = true
+        }
+    }
+</script>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `${main.innerHTML}`
+    showScript.innerText = `${script.innerText}`
+</script>

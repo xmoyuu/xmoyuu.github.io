@@ -1,0 +1,48 @@
+<main id="main">
+    <p id="p" onclick="setStyleBackground(this)" style="font-size:18px">
+        Click here to change background color.
+    </p>
+
+    <button onclick="resetStyle('p')">Reset background color</button>
+    <button onclick="setStyleAttribute('p')">change background color by setAttribute</button>
+</main>
+
+<style id="style">
+    body {
+        background-color: red;
+    }
+
+    p {
+        background-color: white;
+        border: solid blue 1px;
+    }
+</style>
+
+<script id="script">
+    stylesheet = document.styleSheets[0]
+    stylesheet.cssRules[0].style.backgroundColor = 'grey'
+
+    function setStyleBackground(element) {
+        element.style.background = 'red'
+    }
+
+    function resetStyle(elementId) {
+        element = document.getElementById(elementId)
+        element.style.background = 'white'
+    }
+
+    // Note:font-size:18px would be removed
+    function setStyleAttribute(elementId) {
+        elementId = document.getElementById(elementId)
+        elementId.setAttribute('style', 'background-color:green')
+    }
+</script>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showStyle"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `${main.innerHTML}`
+    showStyle.innerText = `${style.innerText}`
+    showScript.innerText = `${script.innerText}`
+</script>

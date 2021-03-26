@@ -1,0 +1,60 @@
+<body>
+    <main id="main">
+        <form>
+            <h1 tabindex=0>Here is heading</h1>
+            <ul>
+                <li tabindex=0>1</li>
+                <li tabindex=0>2</li>
+                <li tabindex=0>3</li>
+            </ul>
+
+            <label for="name">Name:</label>
+            <input type="text" value="Tom" id="name">
+
+            <label for="volume">Volume:</label>
+            <input type="range" min=0 max=100 value=10 id="volume">
+
+            <label for="sure">Sure:</label>
+            <input type="checkbox" id="sure">
+
+            <a tabindex=0 href="duckduckgo.com">DuckDuckGo</a>
+
+            <input type="submit">
+        </form>
+    </main>
+
+    <script id="script">
+        if (document.body.accessibleNode == undefined) {
+            main.innerText = 'use command-line: --enable-blink-features=AccessibilityObjectModel'
+        }
+
+        lastString = ''
+        async function speak() {
+            let accessibleNode = await getComputedAccessibleNode(document.activeElement)
+            if (!accessibleNode || accessibleNode.role == null)
+                return
+            console.log(accessibleNode)
+            let string =
+                accessibleNode.role + ', ' +
+                accessibleNode.name + ', ' +
+                accessibleNode.valueText + ' ' +
+                (accessibleNode.checked != 'none' ? ' checked=' + accessibleNode.checked : '') +
+                (accessibleNode.posInSet > 0 ? ' ' + accessibleNode.posInSet + ' of ' + accessibleNode.setSize : '')
+            if (string != lastString) {
+                console.log(string)
+                speechSynthesis.cancel()
+                speechSynthesis.speak(new SpeechSynthesisUtterance(string))
+            }
+            lastString = string
+        }
+        document.addEventListener('focusin', speak)
+        document.addEventListener('keyup', speak)
+    </script>
+</body>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `${main.innerHTML}`
+    showScript.innerText = `${script.innerText}`
+</script>

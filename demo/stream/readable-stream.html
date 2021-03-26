@@ -1,0 +1,42 @@
+<body>
+    <img id="image" height="30%">
+</body>
+
+<script id="script">
+    fetch('2019-bilibiliID-11371674-BY-你的心弦有我来过-bilibiliUID-11134708-NC.jpg')
+        .then(response => stream(response))
+        .then(stream => new Response(stream))
+        .then(response => response.blob())
+        .then(blob => URL.createObjectURL(blob))
+        .then(url => image.src = url)
+        .catch(error => console.error(error))
+
+    function stream(response) {
+        return new ReadableStream({
+            start(controller) {
+                reader = response.body.getReader()
+                pump()
+                function pump() {
+                    reader.read()
+                        .then(({ done, value }) => {
+                            if (done) {
+                                controller.close()
+                                return
+                            }
+                            controller.enqueue(value)
+                            pump()
+                        })
+                }
+            }
+        })
+    }
+</script>
+
+<pre><code>      
+    &lt;img id="image" height="30%">
+</code></pre>
+<hr>
+<pre><code id="showScript"></code></pre>
+<script>
+    showScript.innerText = `${script.innerText}`
+</script>

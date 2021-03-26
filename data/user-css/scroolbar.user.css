@@ -1,0 +1,25 @@
+/* ==UserStyle==
+@name           Scroolbar
+@namespace      xmoyuu
+@version        1.0.0
+@description    Scroolbar
+@updateURL      https://xmoyuu.github.io/data/user-css/scroolbar.user.css
+@author         xmoyuu
+==/UserStyle== */
+
+@-moz-document regexp(".*") {
+    html {
+        scrollbar-color: rgb(77, 77, 77) rgb(23, 23, 23);
+    }
+    ::-webkit-scrollbar {
+        width: 15px;
+        height: 15px;
+    }
+    ::-webkit-scrollbar-track-piece {
+        background-color: rgb(23, 23, 23);
+    }
+    ::-webkit-scrollbar-thumb {
+        height: 30px;
+        background-color: rgb(77, 77, 77);
+    }
+}

@@ -1,0 +1,10 @@
+<div id="elem"></div>
+
+<script>
+    elem.attachShadow({ mode: 'open' })
+    elem.shadowRoot.innerHTML = `
+        <style> p { font-weight: bold} </style>
+        <p>Hello, John!</p>
+    `
+    alert(elem.shadowRoot.querySelectorAll('p').length)
+</script>

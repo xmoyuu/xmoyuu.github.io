@@ -1,0 +1,74 @@
+<body>
+    <span>Volume: </span>
+    <input type="range" min="0.0" max="1.0" step="0.01" value="0.8" name="volume" id="volumeControl">
+    <button>play</button>
+</body>
+
+<script>
+    audioContext = new window.AudioContext()
+
+    function startOscillators() {
+        oscillatorNodeC = audioContext.createOscillator()
+        oscillatorNodeC.type = 'sine'
+        oscillatorNodeC.frequency.value = 261.625565300598634 // middle C
+        oscillatorNodeC.connect(gainNodeC)
+
+        oscillatorNodeE = audioContext.createOscillator()
+        oscillatorNodeE.type = 'sine'
+        oscillatorNodeE.frequency.value = 329.627556912869929 // E
+        oscillatorNodeE.connect(gainNodeE)
+
+        oscillatorNodeG = audioContext.createOscillator()
+        oscillatorNodeG.type = 'sine'
+        oscillatorNodeG.frequency.value = 391.995435981749294 // G
+        oscillatorNodeG.connect(gainNodeG)
+
+        oscillatorNodeC.start()
+        oscillatorNodeE.start()
+        oscillatorNodeG.start()
+
+        playing = true
+    }
+
+    function stopOscillators() {
+        oscillatorNodeC.stop()
+        oscillatorNodeE.stop()
+        oscillatorNodeG.stop()
+        playing = false
+    }
+
+    gainNodeC = audioContext.createGain()
+    gainNodeE = audioContext.createGain()
+    gainNodeG = audioContext.createGain()
+
+    gainNodeC.gain.value = 0.5
+    gainNodeE.gain.value = gainNodeC.gain.value
+    gainNodeG.gain.value = gainNodeC.gain.value
+    volumeControl.value = gainNodeC.gain.value
+
+    constantSourceNode = audioContext.createConstantSource()
+    constantSourceNode.connect(gainNodeE.gain)
+    constantSourceNode.connect(gainNodeG.gain)
+    constantSourceNode.start()
+
+    gainNodeC.connect(audioContext.destination)
+    gainNodeE.connect(audioContext.destination)
+    gainNodeG.connect(audioContext.destination)
+
+    volumeControl = document.querySelector('#volumeControl')
+    volumeControl.addEventListener('input', function () {
+        constantSourceNode.offset.value = volumeControl.value
+    }, false)
+
+    playing = false
+    playButton = document.querySelector('button')
+    playButton.addEventListener('click', function () {
+        if (playing) {
+            playButton.innerHTML = 'play'
+            stopOscillators()
+        } else {
+            playButton.innerHTML = 'stop'
+            startOscillators()
+        }
+    }, false)
+</script>

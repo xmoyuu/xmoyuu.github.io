@@ -1,0 +1,13 @@
+<head>
+    <script>
+        audioContext = new window.AudioContext()
+        oscillatorNode = audioContext.createOscillator()
+        oscillatorNode.connect(audioContext.destination)
+        // other values:square,sawtooth,triangle,custom
+        oscillatorNode.type = 'sine'
+        // hertz
+        oscillatorNode.frequency.value = 2500
+        oscillatorNode.start()
+        oscillatorNode.stop(1)
+    </script>
+</head>

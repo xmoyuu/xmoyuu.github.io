@@ -1,0 +1,17 @@
+<head>
+    <script src="pako_inflate.js"></script>
+    <script>
+        char = [8, 153, 5, 193, 1, 1, 0, 0, 0, 128, 16, 255, 79, 23, 34, 9, 5, 3, 63, 210, 5, 251]
+        rgba = pako.inflate(new Uint8Array(char))
+    </script>
+</head>
+
+<body>
+    <main id="main"></main>
+</body>
+
+<pre><code id="showScript"></code></pre>
+<script>
+    main.innerText = `rgba:${rgba}`
+    showScript.innerText = `${document.head.innerHTML}`
+</script>

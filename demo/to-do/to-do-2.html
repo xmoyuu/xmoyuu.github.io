@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>to-do</title>
+</head>
+
+<body>
+    <ul id="ul"></ul>
+
+    <label for="todo">todo:</label>
+    <input id="todo" type="text" required>
+
+    <button id="add">+</button>
+    <button id="ask">ask notification permission</button>
+
+    <br>
+
+    <label for="date">date:</label>
+    <input id="date" type="date" required>
+
+    <label for="time">time:</label>
+    <input id="time" type="time" required>
+
+    <ul id="output"></ul>
+</body>
+
+<script>
+
+    function getDateLocaleJSON() {
+        let date = new Date()
+        let time = date.getTime()
+        timezoneOffset = date.getTimezoneOffset() * 60000
+        return new Date(time - timezoneOffset).toJSON()
+    }
+
+    setInputDateTime()
+    function setInputDateTime() {
+        dateLocaleJSON = getDateLocaleJSON()
+        currentDate = dateLocaleJSON.slice(0, 10)
+        currentTime = dateLocaleJSON.slice(11, 16)
+
+        date.value = date.min = currentDate
+        time.value = currentTime
+    }
+
+    askNotificationPermission()
+    ask.onclick = () => {
+        askNotificationPermission()
+    }
+    function askNotificationPermission() {
+        if (window.Notification) {
+            Notification.requestPermission()
+                .then(result => {
+                    if (Notification.permission != 'default') {
+                        ask.hidden = true
+                    }
+                })
+        } else {
+            ask.hidden = true
+        }
+    }
+
+    function showNotification(title, body) {
+        if (window.Notification) {
+            options = {
+                body: body,
+            }
+            new Notification(title, options)
+        }
+    }
+
+    request = window.indexedDB.open("to-do", 1)
+    request.onerror = function (event) {
+        output.innerHTML += '<li>Error loading database.</li>'
+    }
+    request.onsuccess = function (event) {
+        output.innerHTML += '<li>Database initialised.</li>'
+
+        db = request.result
+
+        displayData()
+    }
+    request.onupgradeneeded = function (event) {
+        db = event.target.result
+
+        db.onerror = function (event) {
+            output.innerHTML += '<li>Error loading database.</li>'
+        }
+
+        objectStore = db.createObjectStore("list", { keyPath: "todo" })
+        objectStore.createIndex("date", "date", { unique: false })
+        objectStore.createIndex("time", "time", { unique: false })
+        objectStore.createIndex("notified", "notified", { unique: false })
+
+        output.innerHTML += '<li>Object store created.</li>'
+    }
+
+    function displayData() {
+        ul.innerHTML = ""
+        objectStore = db.transaction('list').objectStore('list')
+        objectStore.openCursor().onsuccess = function (event) {
+            cursor = event.target.result
+            if (cursor) {
+                listItem = document.createElement('li')
+
+                listItem.innerHTML = cursor.value.todo + ' — ' + cursor.value.date + ' — ' + cursor.value.time
+                if (cursor.value.notified) {
+                    listItem.style.textDecoration = "line-through"
+                    listItem.style.color = "rgba(255,0,0,0.5)"
+                }
+                ul.appendChild(listItem)
+                deleteButton = document.createElement('button')
+                listItem.appendChild(deleteButton)
+                deleteButton.innerHTML = 'X'
+                deleteButton.setAttribute('data-task', cursor.value.todo)
+                deleteButton.onclick = function (event) {
+                    deleteItem(event)
+                }
+                cursor.continue()
+            } else {
+                output.innerHTML += '<li>Entries all displayed.</li>'
+            }
+        }
+    }
+
+    function deleteItem(event) {
+        dataTask = event.target.getAttribute('data-task')
+        transaction = db.transaction(["list"], "readwrite")
+        request = transaction.objectStore("list").delete(dataTask)
+        transaction.oncomplete = function () {
+            event.target.parentNode.parentNode.removeChild(event.target.parentNode)
+            output.innerHTML += '<li>Task \"' + dataTask + '\" deleted.</li>'
+        }
+    }
+
+    add.onclick = () => {
+        addData()
+    }
+
+    function addData() {
+        newItem = [{
+            todo: todo.value,
+            date: date.value,
+            time: time.value,
+            notified: false,
+        }]
+
+        transaction = db.transaction(["list"], "readwrite")
+
+        transaction.oncomplete = function () {
+            output.innerHTML += '<li>Transaction completed: database modification finished.</li>'
+            displayData()
+        }
+
+        transaction.onerror = function () {
+            output.innerHTML += '<li>Transaction not opened due to error: ' + transaction.error + '</li>'
+        }
+
+        objectStore = transaction.objectStore("list")
+
+        objectStoreRequest = objectStore.add(newItem[0])
+        objectStoreRequest.onsuccess = function (event) {
+            output.innerHTML += '<li>Request successful.</li>'
+            todo.value = ''
+        }
+
+        console.log(objectStore.indexNames)
+        console.log(objectStore.keyPath)
+        console.log(objectStore.name)
+        console.log(objectStore.transaction)
+        console.log(objectStore.autoIncrement)
+    }
+
+    async function delay(s) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(2)
+            }, s * 1000)
+        })
+    }
+
+    timer()
+    async function timer() {
+        await delay(60 - new Date().getSeconds())
+        check()
+        setInterval(() => {
+            check()
+        }, 60 * 1000)
+    }
+
+    function dash2slash(string) {
+        return string.split('-').join('/')
+    }
+
+    function check() {
+        objectStore = db.transaction(['list'], "readwrite").objectStore('list')
+        objectStore.openCursor().onsuccess = function (event) {
+            cursor = event.target.result
+            if (cursor) {
+                if (!cursor.value.notified) {
+                    let date = new Date(`${dash2slash(cursor.value.date)} ${cursor.value.time}`)
+                    if (date < new Date()) {
+                        cursor.value.notified = true
+                        cursor.update(cursor.value)
+                        showNotification('todo', cursor.value.todo)
+                    }
+                }
+                cursor.continue()
+            }
+        }
+        refreshView()
+    }
+
+    function refreshView() {
+        ul.innerHTML = ''
+        displayData()
+    }
+</script>
+
+</html>

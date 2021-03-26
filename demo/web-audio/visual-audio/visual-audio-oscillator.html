@@ -1,0 +1,93 @@
+<style>
+    canvas {
+        /* ban blank blink */
+        background: #eee;
+    }
+
+    body {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+    }
+</style>
+
+<body>
+    <button class="mute">Mute</button>
+    <canvas></canvas>
+</body>
+
+<script>
+    audioContext = new window.AudioContext()
+
+    oscillatorNode = audioContext.createOscillator()
+    gainNode = audioContext.createGain()
+    oscillatorNode.connect(gainNode).connect(audioContext.destination)
+
+    maxFreq = 6000
+    maxVol = 1
+
+    initialFreq = 3000
+    initialVol = 0.5
+
+    // set options for the oscillator
+    oscillatorNode.type = 'sine'
+    oscillatorNode.frequency.value = initialFreq
+    oscillatorNode.start()
+
+    gainNode.gain.value = initialVol
+
+    // Get new mouse pointer coordinates when mouse is moved
+    // then set new gain and pitch values
+
+    document.onmousemove = updatePage
+
+    function updatePage(e) {
+        CurX = (window.Event) ? e.pageX : event.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft)
+        CurY = (window.Event) ? e.pageY : event.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop)
+
+        oscillatorNode.frequency.value = (CurX / window.innerWidth) * maxFreq
+        gainNode.gain.value = (CurY / window.innerHeight) * maxVol
+
+        canvasDraw()
+    }
+
+    function random(number1, number2) {
+        randomNo = number1 + (Math.floor(Math.random() * (number2 - number1)) + 1)
+        return randomNo
+    }
+
+    canvas = document.querySelector('canvas')
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
+    canvasCtx = canvas.getContext('2d')
+
+    function canvasDraw() {
+        rX = CurX
+        rY = CurY
+        rC = Math.floor((gainNode.gain.value / maxVol) * 30)
+
+        canvasCtx.globalAlpha = 0.2
+
+        for (i = 1; i <= 15; i = i + 2) {
+            canvasCtx.beginPath()
+            canvasCtx.fillStyle = 'rgb(' + 100 + (i * 10) + ',' + Math.floor((gainNode.gain.value / maxVol) * 255) + ',' + Math.floor((oscillatorNode.frequency.value / maxFreq) * 255) + ')'
+            canvasCtx.arc(rX + random(0, 50), rY + random(0, 50), rC / 2 + i, (Math.PI / 180) * 0, (Math.PI / 180) * 360, false)
+            canvasCtx.fill()
+            canvasCtx.closePath()
+        }
+    }
+
+    var mute = document.querySelector('.mute')
+    mute.onclick = function () {
+        if (mute.id == '') {
+            gainNode.disconnect(audioContext.destination)
+            mute.id = 'activated'
+            mute.innerHTML = 'Unmute'
+        } else {
+            gainNode.connect(audioContext.destination)
+            mute.id = ''
+            mute.innerHTML = 'Mute'
+        }
+    }
+</script>

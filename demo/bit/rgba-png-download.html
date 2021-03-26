@@ -1,0 +1,40 @@
+<main id="main">
+    <canvas id="canvas"></canvas>
+    <button id="png">download as PNG</button>
+</main>
+
+<script id="script">
+    canvas.width = 2
+    canvas.height = 2
+
+    context = canvas.getContext('2d')
+
+    context.fillStyle = 'rgba(255,0,0,1)'
+    context.fillRect(0, 0, 1, 1)
+
+    context.fillStyle = 'rgba(0,255,0,1)'
+    context.fillRect(1, 0, 1, 1)
+
+    context.fillStyle = 'rgba(0,0,255,1)'
+    context.fillRect(0, 1, 1, 1)
+
+    context.fillStyle = 'rgba(255,255,255,0)'
+    context.fillRect(1, 1, 1, 1)
+
+    function downloadAsPNG(canvas) {
+        a = document.createElement('a')
+        a.download = 'rgba.png'
+        a.href = canvas.toDataURL()
+        a.click()
+    }
+    png.onclick = () => {
+        downloadAsPNG(canvas)
+    }
+</script>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `${main.innerHTML}`
+    showScript.innerText = `${script.innerText}`
+</script>

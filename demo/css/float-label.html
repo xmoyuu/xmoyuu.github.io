@@ -1,0 +1,63 @@
+<body>
+    <p>
+        将标签 label 的
+        透明度 <a href="https://developer.mozilla.org/docs/Web/CSS/opacity">opacity</a>
+        设置为 0,
+        占位符不可见时为 1
+    </p>
+    <div id="box">
+        <div class="input-field">
+            <input type="text" placeholder="Enter your first name" id="fname" />
+            <label for="fname">First name</label>
+        </div>
+
+        <div class="input-field">
+            <input type="text" placeholder="Enter your last name" id="lname" />
+            <label for="lname">Last name</label>
+        </div>
+    </div>
+</body>
+
+<style id="style">
+    input {
+        font-weight: 800;
+        color: #d27054;
+    }
+
+    ::placeholder {
+        opacity: 1;
+        font-weight: 300;
+        color: #666;
+        font-size: 1rem;
+    }
+
+    label {
+        opacity: 0;
+        transform: translateY(5px);
+        transition:
+            opacity linear 200ms,
+            transform ease-in 150ms;
+        order: -1;
+    }
+
+    input:not(:placeholder-shown)~label {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+
+    .input-field {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #box {
+        column-count: 2;
+    }
+</style>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showStyle"></code></pre>
+<script>
+    showHTML.innerText = `    ${box.outerHTML}`
+    showStyle.innerText = `${style.innerText}`
+</script>

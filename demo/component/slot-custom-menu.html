@@ -1,0 +1,30 @@
+
+<custom-menu>
+	<span slot="title">Candy menu</span>
+	<li slot="item">Lollipop</li>
+	<li slot="item">Fruit Toast</li>
+	<li slot="item">Cup Cake</li>
+</custom-menu>
+
+<template id="tmpl">
+	<div class="menu">
+		<slot name="title"></slot>
+		<ol>
+			<slot name="item"></slot>
+		</ol>
+	</div>
+</template>
+
+<script>
+	customElements.define('custom-menu', class extends HTMLElement {
+		connectedCallback() {
+			this.attachShadow({ mode: 'open' })
+
+			this.shadowRoot.append(tmpl.content.cloneNode(true))
+
+			this.shadowRoot.querySelector('slot[name="title"]').onclick = () => {
+				this.shadowRoot.querySelector('.menu').classList.toggle('closed')
+			}
+		}
+	})
+</script>

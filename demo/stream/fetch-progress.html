@@ -1,0 +1,38 @@
+<script>
+
+    async function func() {
+        response = await fetch('https://api.github.com/repos/javascript-tutorial/en.javascript.info/commits?per_page=100')
+
+        reader = response.body.getReader()
+
+        contentLength = +response.headers.get('Content-Length')
+
+        receivedLength = 0
+        chunks = []
+        while (true) {
+            const { done, value } = await reader.read()
+
+            if (done) {
+                break
+            }
+
+            chunks.push(value)
+            receivedLength += value.length
+
+            console.log(`Received ${receivedLength} of ${contentLength}`)
+        }
+
+        // blob = new Blob(chunks)
+        chunksAll = new Uint8Array(receivedLength)
+        position = 0
+        for (chunk of chunks) {
+            chunksAll.set(chunk, position)
+            position += chunk.length
+        }
+        result = new TextDecoder("utf-8").decode(chunksAll)
+
+        commits = JSON.parse(result)
+        alert(commits[0].author.login)
+    }
+
+</script>

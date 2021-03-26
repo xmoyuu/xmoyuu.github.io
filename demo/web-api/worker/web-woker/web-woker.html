@@ -1,0 +1,19 @@
+<body>
+    <progress value="0" max="100" id="progress"></progress>
+</body>
+
+<script>
+    if (Worker) {
+        worker = new Worker('worker.js')
+        worker.postMessage('hello')
+        worker.onmessage =event =>{
+            progress.value = event.data
+        }
+        worker.onerror = event => {
+            console.log(event.message)
+        }
+        if (progress.value == 100) {
+            worker.terminate()
+        }
+    } 
+</script>

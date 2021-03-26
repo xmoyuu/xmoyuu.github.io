@@ -1,0 +1,25 @@
+<body>
+    <label for="first">first number: </label>
+    <input type="text" id="first" value="0" autocomplete="off">
+    <label for="second">second number: </label>
+    <input type="text" id="second" value="0" autocomplete="off">
+    <output id="result"></output>
+</body>
+
+<script>
+    if (SharedWorker) {
+        sharedWorker = new SharedWorker('shared-worker.js')
+
+        first.oninput = () => {
+            sharedWorker.port.postMessage([first.value, second.value])
+        }
+
+        second.oninput = () => {
+            sharedWorker.port.postMessage([first.value, second.value])
+        }
+
+        sharedWorker.port.onmessage = event => {
+            result.textContent = event.data
+        }
+    }
+</script>

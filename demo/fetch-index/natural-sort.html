@@ -1,0 +1,88 @@
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        showHTML.innerText = `    ${main.outerHTML}`
+        showScript.innerText = `${script.innerText}`
+    })
+</script>
+
+
+<body>
+    <main id="main"></main>
+</body>
+
+<script id="script">
+    function naturalSort(items) {
+        items.sort((a, b) => a.localeCompare(b, navigator.languages[0] || navigator.language, { numeric: true, ignorePunctuation: true }))
+        return items
+    }
+
+    items = [
+        '第02回-第10页.webp',
+        '第02回-第11页.webp',
+        '第02回-第12页.webp',
+        '第02回-第13页.webp',
+        '第02回-第14页.webp',
+        '第02回-第15页.webp',
+        '第02回-第16页.webp',
+        '第02回-第17页.webp',
+        '第02回-第18页.webp',
+        '第02回-第19页.webp',
+        '第02回-第1页.webp',
+        '第02回-第20页.webp',
+        '第02回-第21页.webp',
+        '第02回-第22页.webp',
+        '第02回-第23页.webp',
+        '第02回-第24页.webp',
+        '第02回-第25页.webp',
+        '第02回-第2页.webp',
+        '第02回-第3页.webp',
+        '第02回-第4页.webp',
+        '第02回-第5页.webp',
+        '第02回-第6页.webp',
+        '第02回-第7页.webp',
+        '第02回-第8页.webp',
+        '第02回-第9页.webp',
+        '第01回-第10页.webp',
+        '第01回-第11页.webp',
+        '第01回-第12页.webp',
+        '第01回-第13页.webp',
+        '第01回-第14页.webp',
+        '第01回-第15页.webp',
+        '第01回-第16页.webp',
+        '第01回-第17页.webp',
+        '第01回-第18页.webp',
+        '第01回-第19页.webp',
+        '第01回-第1页.webp',
+        '第01回-第20页.webp',
+        '第01回-第21页.webp',
+        '第01回-第22页.webp',
+        '第01回-第23页.webp',
+        '第01回-第24页.webp',
+        '第01回-第25页.webp',
+        '第01回-第26页.webp',
+        '第01回-第27页.webp',
+        '第01回-第28页.webp',
+        '第01回-第29页.webp',
+        '第01回-第2页.webp',
+        '第01回-第30页.webp',
+        '第01回-第31页.webp',
+        '第01回-第32页.webp',
+        '第01回-第33页.webp',
+        '第01回-第34页.webp',
+        '第01回-第35页.webp',
+        '第01回-第36页.webp',
+        '第01回-第3页.webp',
+        '第01回-第4页.webp',
+        '第01回-第5页.webp',
+        '第01回-第6页.webp',
+        '第01回-第7页.webp',
+        '第01回-第8页.webp',
+        '第01回-第9页.webp',
+    ]
+
+    naturalSort(items).forEach(element => {
+        main.innerText += `${element}\n`
+    })
+</script>

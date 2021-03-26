@@ -1,0 +1,41 @@
+<main id="main">
+    <button id="button">Show my location</button>
+    <br>
+    <p id="p"></p>
+    <a id="a"></a>
+</main>
+
+<script id="script">
+    function geo() {
+        if (navigator.geolocation) {
+            p.textContent = 'Locating…'
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    latitude = position.coords.latitude
+                    longitude = position.coords.longitude
+                    p.textContent = ''
+                    a.href = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`
+                    a.textContent = `Latitude: ${latitude} °, Longitude: ${longitude} °`
+                },
+                () => {
+                    p.textContent = 'Unable to retrieve your location'
+                }),
+            {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            }
+        } else {
+            p.textContent = 'Geolocation is not supported by your browser'
+        }
+    }
+
+    button.addEventListener('click', geo)
+</script>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showScript"></code></pre>
+<script>
+    showHTML.innerText = `${main.innerHTML}`
+    showScript.innerText = `${script.innerText}`
+</script>

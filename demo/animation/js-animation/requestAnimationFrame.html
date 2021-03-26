@@ -1,0 +1,78 @@
+<body>
+    <button id="button" style="position:relative">button</button>
+</body>
+
+
+<script>
+    function animate(options) {
+        start = performance.now()
+        requestAnimationFrame(
+            function animate(time) {
+
+                timeFraction = (time - start) / options.duration
+                if (timeFraction > 1) timeFraction = 1
+
+                progress = options.timing(timeFraction)
+
+                options.draw(progress)
+
+                if (timeFraction < 1) {
+                    requestAnimationFrame(animate)
+                }
+
+            })
+    }
+
+    function makeEaseInOut(timing) {
+        return function (timeFraction) {
+            if (timeFraction < .5)
+                return timing(2 * timeFraction) / 2
+            else
+                return (2 - timing(2 * (1 - timeFraction))) / 2
+        }
+    }
+
+    function makeEaseOut(timing) {
+        return function (timeFraction) {
+            return 1 - timing(1 - timeFraction)
+        }
+    }
+
+    function bounce(timeFraction) {
+        for (let a = 0, b = 1, result; 1; a += b, b /= 2) {
+            if (timeFraction >= (7 - 4 * a) / 11) {
+                return -Math.pow((11 - 6 * a - 11 * timeFraction) / 4, 2) + Math.pow(b, 2)
+            }
+        }
+    }
+
+    let bounceEaseOut = makeEaseOut(bounce)
+    let bounceEaseInOut = makeEaseInOut(bounce)
+
+    button.onclick = function () {
+        animate({
+            duration: 5000,
+            // timing: function back(x, timeFraction) {
+            //     return Math.pow(timeFraction, 2) * ((x + 1) * timeFraction - x)
+            // }.bind(1.5, null),
+
+            // timing: function bounce(timeFraction) {
+            //     for (let a = 0, b = 1, result 1 a += b, b /= 2) {
+            //         if (timeFraction >= (7 - 4 * a) / 11) {
+            //             return -Math.pow((11 - 6 * a - 11 * timeFraction) / 4, 2) + Math.pow(b, 2)
+            //         }
+            //     }
+            // },
+
+            // timing: function elastic(x, timeFraction) {
+            //     return Math.pow(2, 10 * (timeFraction - 1)) * Math.cos(20 * Math.PI * x / 3 * timeFraction)
+            // }.bind(null, 1.5),
+
+            // timing: bounceEaseOut,
+            timing: bounceEaseInOut,
+            draw: function (progress) {
+                button.style.left = progress * 500 + 'px'
+            }
+        })
+    }
+</script>

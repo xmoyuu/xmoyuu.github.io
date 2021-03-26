@@ -1,0 +1,39 @@
+<head>
+    <script>
+        audioContext = new window.AudioContext()
+
+        request = new XMLHttpRequest()
+        request.open('GET', './Hanser.mp3', true)
+        request.responseType = 'arraybuffer'
+        request.onload = function () {
+            audioContext.decodeAudioData(request.response, function (buffer) {
+                playBuffer(buffer)
+            }, function () {
+                // error handle
+                // 例如文件损坏、格式不对
+            })
+        }
+        request.send()
+
+        function playBuffer(buffer) {
+            sourceNode = audioContext.createBufferSource()
+            sourceNode.buffer = buffer
+
+            sourceNode2 = audioContext.createBufferSource()
+            sourceNode2.buffer = buffer
+            sourceNode2.loop = true
+            sourceNode2.loopStart = 150
+            sourceNode2.loopEnd = 175
+
+            compressorNode = audioContext.createDynamicsCompressor()
+            sourceNode.connect(compressorNode)
+            sourceNode2.connect(compressorNode)
+
+            compressorNode.connect(audioContext.destination)
+
+            sourceNode.start(0)
+            sourceNode2.start(0, 150)
+        }
+    </script>
+</head>
+

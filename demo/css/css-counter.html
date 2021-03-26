@@ -1,0 +1,49 @@
+<body>
+    <main id="main">
+        <h3>Introduction</h3>
+        <h3>Body</h3>
+        <h3>Conclusion</h3>
+
+        <ol>
+            <li>item
+                <ol>
+                    <li>item
+                        <ol>
+                            <li>item</li>
+                        </ol>
+                    </li>
+                    <li>item</li>
+                </ol>
+            </li>
+            <li>item</li>
+        </ol>
+    </main>
+
+    <style id="style">
+        body {
+            counter-reset: section;
+        }
+
+        h3::before {
+            counter-increment: section;
+            content: 'Section 'counter(section) ': ';
+        }
+
+        ol {
+            counter-reset: list;
+            list-style-type: none;
+        }
+
+        li::before {
+            counter-increment: list;
+            content: counters(list, '.') ' ';
+        }
+    </style>
+</body>
+
+<pre><code id="showHTML"></code></pre>
+<pre><code id="showStyle"></code></pre>
+<script>
+    showHTML.innerText = `${main.innerHTML}`
+    showStyle.innerText = `${style.innerText}`
+</script>

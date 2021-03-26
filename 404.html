@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>redirect</title>
+    <script>
+        // https://xmoyuu.github.io/one/two?a=b&c=d#hash
+        //                     ↓
+        // https://xmoyuu.github.io/?pathname=/one/two&search=a=b~and~c=d#hash
+
+        // pathname == /one/two
+        // search == ?a=b&c=d
+        // search.slice(1) == a=b&c=d
+
+        let { protocol, hostname, port, pathname, search, hash } = location
+        location.replace(
+            protocol + '//'
+            + hostname
+            + (port ? ':' + port : '')
+            + '/?pathname=' + pathname
+            + (search ? '&search=' + search.slice(1).replace(/&/g, '~and~') : '')
+            + hash
+        )
+    </script>
+</head>
+
+</html>

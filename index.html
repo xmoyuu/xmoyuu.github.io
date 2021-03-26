@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>xmoyuu</title>
+
+    <link rel="icon" type="image/png">
+    <link rel="apple-touch-icon">
+    <script src="js/emoji-as-favicon.js"></script>
+    <script>
+        icon = document.querySelector('link[rel=icon]')
+        appleTouchIcon = document.querySelector('link[rel=apple-touch-icon]')
+        emojiAsFavicon('🧐', -4, 28)
+        emojiAsAppleTouchIcon('🧐', 10, 150)
+    </script>
+
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/github-syntax-dark.css">
+    <link rel="stylesheet" href="css/blog-dark.css">
+    <link rel="stylesheet" href="css/github-syntax-light.css" media="(prefers-color-scheme: light)">
+    <link rel="stylesheet" href="css/blog-light.css" media="(prefers-color-scheme: light)">
+
+    <script src="js/redirect-handle.js"></script>
+    <script src="js/service-worker-register.js"></script>
+    <script src="js/fetch-github-api-content.js"></script>
+    <script src="js/random-quote.js"></script>
+</head>
+
+<body>
+    <nav>
+        <ul style="list-style:none">
+            <li><a href="/crop">裁切</a></li>
+            <li><a href="/bit">位</a></li>
+            <li><a href="/to-do">待办</a></li>
+            <li><a href="/stream">流</a></li>
+            <li><a href="/prologue">开篇</a></li>
+            <li><a href="/anchor">锚</a></li>
+        </ul>
+    </nav>
+    <main>
+        <article id="article">loading...</article>
+    </main>
+    <div id="goTop" hidden>^</div>
+    <script>
+        onPopState()
+        addEventListener('popstate', onPopState)
+        function onPopState() {
+            switch (location.pathname) {
+                case '/':
+                case '/index.html':
+                    randomQuote('js/quote.json', article)
+                    return
+                default:
+                    fetchGithubAPIContent(article)
+                    return
+            }
+        }
+
+        links = document.querySelectorAll('a[href]')
+        onLoad(links)
+        function onLoad(links) {
+            links.forEach(element => {
+                element.addEventListener('click', event => {
+                    event.preventDefault()
+                    history.pushState(null, '',
+                        element.getAttribute('href'),
+                    )
+                    onPopState()
+                })
+            })
+        }
+    </script>
+
+    <script>
+        goTop.onclick = () => {
+            window.scrollTo(pageXOffset, 0)
+        }
+        window.addEventListener('scroll', () => {
+            goTop.hidden = !(document.body.scrollTop > 20 || document.documentElement.scrollTop > 20)
+        })
+    </script>
+</body>
+
+</html>
